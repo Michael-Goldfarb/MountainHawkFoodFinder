@@ -16,7 +16,7 @@ struct LoginView: View {
     var body: some View {
         Group {
             if isLoggedIn {
-                Home()
+                HomeView()
             } else {
                 
                 ZStack {
@@ -53,4 +53,3 @@ struct LoginView_Previews: PreviewProvider {
         LoginView()
     }
 }
-
