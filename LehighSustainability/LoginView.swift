@@ -18,22 +18,30 @@ struct LoginView: View {
             if isLoggedIn {
                 Home()
             } else {
-                VStack {
-                            VStack {
-                                LoginHeader()
-                                    .padding(.bottom)
-                            
-                                
-                                GoogleSiginBtn {
-                                    }
-                                } // GoogleSiginBtn
-                            } // VStack
-                            .padding(.top, 52)
-                            Spacer()
-                        }
+
+                    ZStack {
+                        Color(red: 0.2, green: 0.20, blue: 0.25)
                     }
+                    VStack {
+                        VStack {
+                            LoginHeader()
+                                .padding(.bottom)
+                            
+                            
+                            GoogleSiginBtn {
+                                GoogleSignInManager.shared.signIn { success in
+                                    isLoggedIn = success
+                                }
+                            }
+                        } // GoogleSiginBtn
+                    } // VStack
+                    .padding(.top, 52)
+                    Spacer()
                 }
-}
+            }
+        }
+    }
+
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
