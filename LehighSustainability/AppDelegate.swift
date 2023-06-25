@@ -1,19 +1,19 @@
 //
-//  LehighSustainabilityApp.swift
+//  +View.swift
 //  LehighSustainability
 //
 //  Created by Michael Goldfarb on 6/24/23.
 //
 
-import SwiftUI
-import Firebase
+
 import UIKit
+import Firebase
 import GoogleSignIn
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        // Initialization code for firebase
         FirebaseApp.configure()
-        GoogleSignInManager.shared.configure()
         return true
     }
     
@@ -25,13 +25,3 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 }
 
-
-@main
-struct LehighSustainabilityApp: App {
-    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-    var body: some Scene {
-        WindowGroup {
-            LoginView()
-        }
-    }
-}
