@@ -9,14 +9,16 @@ import SwiftUI
 
 struct LoginHeader: View {
     var body: some View {
-        VStack {
-            Text("Hello Again!")
-                .font(.largeTitle)
-                .fontWeight(.medium)
-                .padding()
-            
-            Text("Login to enter the app!")
-                .multilineTextAlignment(.center)
+        ZStack {
+            Color(red: 0.00, green: 0.30, blue: 0.15)
+            VStack {
+                Text("Login to enter the app!")
+                    .font(.title)
+                    .fontWeight(.medium)
+                    .padding()
+                
+                
+            }
         }
     }
 }

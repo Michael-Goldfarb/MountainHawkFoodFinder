@@ -18,12 +18,16 @@ struct LoginView: View {
             if isLoggedIn {
                 Home()
             } else {
-
-                    ZStack {
-                        Color(red: 0.2, green: 0.20, blue: 0.25)
-                    }
+                
+                ZStack {
+                    Color(red: 0.00, green: 0.30, blue: 0.15)
                     VStack {
                         VStack {
+                            Text("Lehigh Sustainability!")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, alignment: .center)
+                            
                             LoginHeader()
                                 .padding(.bottom)
                             
@@ -41,6 +45,7 @@ struct LoginView: View {
             }
         }
     }
+}
 
 
 struct LoginView_Previews: PreviewProvider {
