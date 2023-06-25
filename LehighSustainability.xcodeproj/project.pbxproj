@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FF48A4BC2A47D47600BDBFDB /* GoogleSiginBtn.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BB2A47D47600BDBFDB /* GoogleSiginBtn.swift */; };
+		FF48A4BC2A47D47600BDBFDB /* GoogleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */; };
 		FF48A4BE2A47D48100BDBFDB /* LoginHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */; };
 		FFF4519F2A47C67900729F41 /* LehighSustainabilityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF4519E2A47C67900729F41 /* LehighSustainabilityApp.swift */; };
 		FFF451A32A47C67C00729F41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFF451A22A47C67C00729F41 /* Assets.xcassets */; };
@@ -22,7 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		FF48A4BB2A47D47600BDBFDB /* GoogleSiginBtn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleSiginBtn.swift; sourceTree = "<group>"; };
+		FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleButton.swift; sourceTree = "<group>"; };
 		FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHeader.swift; sourceTree = "<group>"; };
 		FFF4519B2A47C67900729F41 /* LehighSustainability.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LehighSustainability.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF4519E2A47C67900729F41 /* LehighSustainabilityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LehighSustainabilityApp.swift; sourceTree = "<group>"; };
@@ -73,7 +73,7 @@
 				FFF451BF2A47C81100729F41 /* GoogleSignInManager.swift */,
 				FFF451C32A47C84200729F41 /* HomeViewModel.swift */,
 				FFF451C52A47C85700729F41 /* LoginView.swift */,
-				FF48A4BB2A47D47600BDBFDB /* GoogleSiginBtn.swift */,
+				FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */,
 				FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */,
 				FFF451B42A47C77E00729F41 /* GoogleService-Info.plist */,
 				FFF451A22A47C67C00729F41 /* Assets.xcassets */,
@@ -173,7 +173,7 @@
 				FFF451C02A47C81100729F41 /* GoogleSignInManager.swift in Sources */,
 				FFF451C42A47C84200729F41 /* HomeViewModel.swift in Sources */,
 				FFF4519F2A47C67900729F41 /* LehighSustainabilityApp.swift in Sources */,
-				FF48A4BC2A47D47600BDBFDB /* GoogleSiginBtn.swift in Sources */,
+				FF48A4BC2A47D47600BDBFDB /* GoogleButton.swift in Sources */,
 				FF48A4BE2A47D48100BDBFDB /* LoginHeader.swift in Sources */,
 				FFF451C62A47C85700729F41 /* LoginView.swift in Sources */,
 			);

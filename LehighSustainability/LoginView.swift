@@ -32,7 +32,7 @@ struct LoginView: View {
                                 .padding(.bottom)
                             
                             
-                            GoogleSiginBtn {
+                            GoogleButton {
                                 GoogleSignInManager.shared.signIn { success in
                                     isLoggedIn = success
                                 }

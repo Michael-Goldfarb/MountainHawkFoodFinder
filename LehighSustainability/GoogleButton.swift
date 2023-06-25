@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct GoogleSiginBtn: View {
+struct GoogleButton: View {
     var action: () -> Void
     
     var body: some View {
@@ -33,8 +33,8 @@ struct GoogleSiginBtn: View {
     }
 }
 
-struct GoogleSiginBtn_Previews: PreviewProvider {
+struct GoogleButton_Previews: PreviewProvider {
     static var previews: some View {
-        GoogleSiginBtn(action: {})
+        GoogleButton(action: {})
     }
 }
