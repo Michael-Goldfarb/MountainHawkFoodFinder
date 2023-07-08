@@ -1,6 +1,6 @@
 //
-//  FirebAuth.swift
-//  LehighSustainability
+//  GoogleSignInManager.swift
+//  LehighFoodFinder
 //
 //  Created by Michael Goldfarb on 6/24/23.
 //

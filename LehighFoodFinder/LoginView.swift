@@ -1,6 +1,6 @@
 //
-//  LoginHeader.swift
-//  LehighSustainability
+//  LoginView.swift
+//  LehighFoodFinder
 //
 //  Created by Michael Goldfarb on 6/24/23.
 //

@@ -1,6 +1,6 @@
 //
-//  LehighSustainabilityApp.swift
-//  LehighSustainability
+//  LehighFoodFinderApp.swift
+//  LehighFoodFinder
 //
 //  Created by Michael Goldfarb on 6/24/23.
 //
@@ -27,7 +27,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
 
 @main
-struct LehighSustainabilityApp: App {
+struct LehighFoodFinderApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     var body: some Scene {
         WindowGroup {

@@ -1,6 +1,6 @@
 //
 //  LoginHeader.swift
-//  LehighSustainability
+//  LehighFoodFinder
 //
 //  Created by Michael Goldfarb on 6/24/23.
 //
@@ -16,8 +16,6 @@ struct LoginHeader: View {
                     .font(.title)
                     .fontWeight(.medium)
                     .padding()
-                
-                
             }
         }
     }

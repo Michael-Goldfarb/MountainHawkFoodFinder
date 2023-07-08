@@ -1,6 +1,6 @@
 //
-//  FavouriteNumberView.swift
-//  PlanetPicks IOS2
+//  HomeViewModel.swift
+//  LehighFoodFinder
 //
 //  Created by Michael Goldfarb on 6/10/23.
 //
@@ -8,8 +8,8 @@
 
 import SwiftUI
 import Combine
-import FirebaseAnalytics
-import FirebaseAnalyticsSwift
+// import FirebaseAnalytics
+// import FirebaseAnalyticsSwift
 
 class HomeViewModel: ObservableObject {
   @Published var betAmount: Double = 10.0
