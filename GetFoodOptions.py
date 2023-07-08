@@ -41,11 +41,9 @@ for course_section in course_sections:
     # Extract the menu item names and calorie amounts
     for item in menu_items:
         menu_item_name = item['data-fooditemname']
-        calorie_text = item.text.strip()
-        # Extract the calorie amount if a match is found, otherwise assign 0 as the default value
-        match = re.search(r'\d+', calorie_text)
-        calorie_amount = match.group() if match else '0'
-        print(f"{menu_item_name}: {calorie_amount} calories")
+        calorie_element = item.find_next('a', class_='get-nutrition')
+        calorie_text = calorie_element.text.strip() if calorie_element else '0'
+        print(f"{menu_item_name}: {calorie_text} calories")
 
 
     print()  # Add a blank line to separate courses
