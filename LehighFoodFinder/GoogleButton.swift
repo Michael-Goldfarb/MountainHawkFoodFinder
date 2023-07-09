@@ -21,7 +21,7 @@ struct GoogleButton: View {
                     .frame(width: 24, height: 24)
                 
                 Text("Continue with Google")
-                    .font(.system(size: 22)) // Adjust the font size here
+                    .font(.system(size: 22))
                     .foregroundColor(.black)
                 
                 Spacer()

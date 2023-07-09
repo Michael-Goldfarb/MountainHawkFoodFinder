@@ -9,14 +9,11 @@ import SwiftUI
 
 struct LoginHeader: View {
     var body: some View {
-        ZStack {
-            Color(red: 0.00, green: 0.30, blue: 0.15)
-            VStack {
-                Text("Login to enter the app!")
-                    .font(.title)
-                    .fontWeight(.medium)
-                    .padding()
-            }
+        VStack {
+            Text("Welcome to Lehigh Food Finder")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding()
         }
     }
 }

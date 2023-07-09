@@ -10,39 +10,39 @@ import GoogleSignIn
 
 struct LoginView: View {
     @State private var isLoggedIn = false
-    @State private var username: String = ""
-    @State private var password: String = ""
     
     var body: some View {
-        Group {
-            if isLoggedIn {
-                HomeView()
-            } else {
-                ZStack {
-                    Color(red: 0.00, green: 0.30, blue: 0.15)
-                        .ignoresSafeArea()
-                    
-                    VStack(spacing: 32) {
-                        Text("Lehigh Food Finder")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                        
-                        LoginHeader()
-                            .padding(.bottom)
-                        
-                        GoogleButton {
-                            GoogleSignInManager.shared.signIn { success in
-                                isLoggedIn = success
-                            }
-                        }
+        ZStack {
+            Color(UIColor.systemBackground)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 32) {
+                Spacer()
+                
+                Text("Welcome to Lehigh Food Finder")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                
+                Text("A place to find, rate, and enjoy Lehigh's eatery options!")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                
+                Spacer()
+                
+                GoogleButton {
+                    GoogleSignInManager.shared.signIn { success in
+                        isLoggedIn = success
                     }
-                    .padding(.horizontal, 32)
                 }
+                
+                Spacer()
             }
+            .padding()
         }
-        .navigationBarHidden(true)
     }
 }
 
