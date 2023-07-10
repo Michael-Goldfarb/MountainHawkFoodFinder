@@ -13,7 +13,7 @@ struct LoginView: View {
     
     var body: some View {
         ZStack {
-            Color(UIColor.systemBackground)
+            LinearGradient(gradient: Gradient(colors: [Color(red: 0.43, green: 0.27, blue: 0.14), Color(red: 0.29, green: 0.18, blue: 0.09)]), startPoint: .top, endPoint: .bottom)
                 .ignoresSafeArea()
             
             VStack(spacing: 32) {
@@ -22,12 +22,13 @@ struct LoginView: View {
                 Text("Welcome to Lehigh Food Finder")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding()
                 
                 Text("A place to find, rate, and enjoy Lehigh's eatery options!")
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white)
                     .multilineTextAlignment(.center)
                     .padding()
                 
