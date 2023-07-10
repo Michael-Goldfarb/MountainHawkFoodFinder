@@ -12,7 +12,7 @@ struct GoogleButton: View {
     
     var body: some View {
         Button(action: action) {
-            HStack {
+            HStack(spacing: 2) { // Adjust the spacing as desired
                 Spacer()
                 
                 Image("google")
@@ -20,9 +20,10 @@ struct GoogleButton: View {
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 24, height: 24)
                 
-                Text("Continue with Google")
+                Text("   Continue with Google")
                     .font(.system(size: 22))
                     .foregroundColor(.black)
+                    .padding(.leading, -4) // Adjust the leading padding as desired
                 
                 Spacer()
             }
@@ -34,6 +35,7 @@ struct GoogleButton: View {
         .frame(height: 50)
     }
 }
+
 
 struct GoogleButton_Previews: PreviewProvider {
     static var previews: some View {
