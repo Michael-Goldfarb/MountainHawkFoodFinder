@@ -40,6 +40,10 @@ struct LoginView: View {
                     }
                 }
                 
+                AppleButton {
+                    
+                }
+                
                 Spacer()
             }
             .padding()
