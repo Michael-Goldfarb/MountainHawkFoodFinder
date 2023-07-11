@@ -62,6 +62,12 @@ try:
                     menu_item_name == "None"
                     calorie_text = None
                 print(f"{menu_item_name}: {calorie_text} calories")
+                # Extract the allergens
+                # Extract the allergens
+                allergens_div = item.find_next('div', id=lambda x: x and x.startswith('allergens-'))
+                allergen_images = allergens_div.find_all('img', class_='icon-allergen')
+                allergen_names = [image['alt'] for image in allergen_images]
+                print(f"Allergens: {', '.join(allergen_names)}")
             print()
 
 except AttributeError:
