@@ -31,35 +31,38 @@ try:
     print(menu_id)
     menu_div = soup.find('div', id=theMenu)
 
-    # Find the bite-menu-course sections
-    course_sections = menu_div.find_all('div', class_='bite-menu-course')
+    # Find the meal sections
+    meal_sections = menu_div.find_all('div', class_='accordion-block')
 
-    # Iterate over the course sections and extract menu items with calories
-    for course_section in course_sections:
-        # Extract the course name
-        course_name = course_section.find('h5').text
-        print(f"Course: {course_name}")
+    # Iterate over the meal sections
+    for meal_section in meal_sections:
+        # Extract the meal type
+        meal_type = meal_section['class'][1]
+        print(f"Meal Type: {meal_type}")
 
-        # Extract the menu items within the course section
-        menu_items = course_section.find_next('ul', class_='bite-menu-item').find_all('a', class_='get-nutritioncalculator')
+        # Find the course sections within the meal section
+        course_sections = meal_section.find_all('div', class_='bite-menu-course')
 
-        # Extract the menu item names and calorie amounts
-        for item in menu_items:
-            menu_item_name = item['data-fooditemname']
-            calorie_element = item.find_next('a', class_='get-nutrition')
-            calorie_text = calorie_element.text.strip() if calorie_element else '0'
-            print(f"{menu_item_name}: {calorie_text} calories")
+        # Iterate over the course sections and extract menu items with calories
+        for course_section in course_sections:
+            # Extract the course name
+            course_name = course_section.find('h5').text
+            print(f"Course: {course_name}")
 
-        print()  # Add a blank line to separate courses
-    # # Find the menu items within the current-menu date
-    # breakfastMenu = menu_dates.find('li', class_='bite-date current-menu').find_next('ul', class_='bite-menu-item').find_all('a', class_='get-nutritioncalculator')
-    # # Extract the menu item names and calorie amounts
-    # for item in breakfastMenu:
-    #     menu_item_name = item['data-fooditemname']
-    #     calorie_element = item.find_next('a', class_='get-nutrition')
-    #     calorie_text = calorie_element.text.strip() if calorie_element else '0'
-    #     print(f"{menu_item_name}: {calorie_text} calories")
-        
+            # Extract the menu items within the course section
+            menu_items = course_section.find_next('ul', class_='bite-menu-item').find_all('a', class_='get-nutritioncalculator')
+
+            # Extract the menu item names and calorie amounts
+            for item in menu_items:
+                menu_item_name = item['data-fooditemname']
+                calorie_element = item.find_next('a', class_='get-nutrition')
+                calorie_text = calorie_element.text.strip() if calorie_element else '0'
+                calorie_text = calorie_text.replace("cal", "")
+                if menu_item_name == "Have A Nice Day!":
+                    menu_item_name == "None"
+                    calorie_text = None
+                print(f"{menu_item_name}: {calorie_text} calories")
+            print()
 
 except AttributeError:
     print("No menu found")
