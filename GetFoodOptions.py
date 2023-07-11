@@ -3,22 +3,31 @@ import requests
 import re
 from bs4 import BeautifulSoup
 
-# # Set up connection to ElephantSQL
-# conn = psycopg2.connect(
-#     host = 'rajje.db.elephantsql.com',
-#     database = 'syabkhtb',
-#     user = 'syabkhtb',
-#     port = '5432',
-#     password = 'J7LXI5pNQ_UoUP316yEd-yoXnCOZK8HE'
-# )
+# Set up connection to ElephantSQL
+conn = psycopg2.connect(
+    host='rajje.db.elephantsql.com',
+    database='syabkhtb',
+    user='syabkhtb',
+    port='5432',
+    password='J7LXI5pNQ_UoUP316yEd-yoXnCOZK8HE'
+)
 
-# URL of the menu page
+cursor = conn.cursor()
+cursor.execute("""
+    CREATE TABLE IF NOT EXISTS rathboneOptions (
+        meal_type VARCHAR(100),
+        course_name VARCHAR(100),
+        menu_item_name VARCHAR(100),
+        calorie_text INTEGER,
+        allergen_names TEXT
+    )
+""")
+conn.commit()
+cursor.execute("TRUNCATE TABLE rathboneOptions;")
+
 url = "https://menus.sodexomyway.com/BiteMenu/Menu?menuId=16872&locationId=97451005&whereami=http://lehigh.sodexomyway.com/dining-near-me/rathbone"
-
-# Send a GET request to retrieve the HTML content of the page
 response = requests.get(url)
 
-# Create a BeautifulSoup object to parse the HTML content
 soup = BeautifulSoup(response.content, "html.parser")
 
 # Find the bite-menu-dates section
@@ -33,6 +42,9 @@ try:
 
     # Find the meal sections
     meal_sections = menu_div.find_all('div', class_='accordion-block')
+
+    # Prepare the data for insertion
+    data_to_insert = []
 
     # Iterate over the meal sections
     for meal_section in meal_sections:
@@ -59,48 +71,31 @@ try:
                 calorie_text = calorie_element.text.strip() if calorie_element else '0'
                 calorie_text = calorie_text.replace("cal", "")
                 if menu_item_name == "Have A Nice Day!":
-                    menu_item_name == "None"
+                    menu_item_name = "None"
                     calorie_text = None
                 print(f"{menu_item_name}: {calorie_text} calories")
-                # Extract the allergens
                 # Extract the allergens
                 allergens_div = item.find_next('div', id=lambda x: x and x.startswith('allergens-'))
                 allergen_images = allergens_div.find_all('img', class_='icon-allergen')
                 allergen_names = [image['alt'] for image in allergen_images]
-                print(f"Allergens: {', '.join(allergen_names)}")
-            print()
+                allergen_names_text = ', '.join(allergen_names)
+                print(f"Allergens: {allergen_names_text}")
+                # Prepare the data row for insertion
+                data_row = (meal_type, course_name, menu_item_name, calorie_text, allergen_names_text)
+                data_to_insert.append(data_row)
+                print()
 
 except AttributeError:
     print("No menu found")
 
+# Insert data into the table
+insert_query = """
+    INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names)
+    VALUES (%s, %s, %s, %s, %s);
+"""
+cursor.executemany(insert_query, data_to_insert)
+conn.commit()
 
-
-
-
-# cursor = conn.cursor()
-# cursor.execute("""
-#     CREATE TABLE IF NOT EXISTS rathboneOptions (
-        
-#     )
-# """)
-# conn.commit()
-
-
-
-
-
-
-
-
-# # Insert data into the table
-# cursor.execute("TRUNCATE TABLE rathboneOptions;")
-
-# cursor.executemany("""
-#     INSERT INTO rathboneOptions ()
-#     VALUES ()
-# """, )
-
-# # Commit the changes and close the cursor and connection
-# conn.commit()
-# cursor.close()
-# conn.close()
+# Close the cursor and connection
+cursor.close()
+conn.close()
