@@ -8,8 +8,6 @@
 
 import SwiftUI
 import Combine
-// import FirebaseAnalytics
-// import FirebaseAnalyticsSwift
 
 class HomeViewModel: ObservableObject {
   @Published var betAmount: Double = 10.0
@@ -54,6 +52,11 @@ struct HomeView: View {
     .shadow(radius: 8)
     .navigationTitle("Sports Betting")
   }
+}
+struct User: Codable {
+//    let name: String?
+    let username: String?
+    let email: String
 }
 
 struct HomeView_Previews: PreviewProvider {
