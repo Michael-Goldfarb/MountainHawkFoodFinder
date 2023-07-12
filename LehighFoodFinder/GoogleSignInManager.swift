@@ -113,7 +113,7 @@ class GoogleSignInManager: NSObject, ObservableObject {
             request.httpMethod = "POST"
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
-           let user = User(username: name, email: email ?? "")
+           let user = User(name: name, email: email ?? "")
 
             do {
                 let encoder = JSONEncoder()
