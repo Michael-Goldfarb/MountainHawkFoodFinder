@@ -19,14 +19,10 @@ public class UserService {
     public List<User> getUsers() {
         List<User> users = new ArrayList<>();
 
-        // Establish a connection to your database
         try (Connection connection = dataSource.getConnection()) {
-            // Create a statement to execute the SQL query
             try (Statement statement = connection.createStatement()) {
-                // Execute the query and retrieve the result set
-                ResultSet resultSet = statement.executeQuery("SELECT * FROM user_data");
+                ResultSet resultSet = statement.executeQuery("SELECT * FROM userData");
 
-                // Process the result set and map it to User objects
                 while (resultSet.next()) {
                     User user = new User();
                     user.setEmail(resultSet.getString("email"));
@@ -41,7 +37,7 @@ public class UserService {
         return users;
     }
     public User createUser(User user) {
-        String sql = "INSERT INTO user_data (email, name) VALUES (?, ?)";
+        String sql = "INSERT INTO userData (email, name) VALUES (?, ?)";
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
