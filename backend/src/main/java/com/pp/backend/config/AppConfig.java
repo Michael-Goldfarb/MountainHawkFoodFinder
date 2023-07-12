@@ -44,7 +44,7 @@ public class AppConfig {
     }
 
     @Bean
-    public MLBGameService mlbGameService(DataSource dataSource) {
-        return new MLBGameService(dataSource);
+    public UserService userService(DataSource dataSource) {
+        return new UserService(dataSource);
     }
 }
