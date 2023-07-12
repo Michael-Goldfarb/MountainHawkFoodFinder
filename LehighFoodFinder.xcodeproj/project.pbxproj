@@ -11,6 +11,7 @@
 		FF48A4BC2A47D47600BDBFDB /* GoogleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */; };
 		FF48A4BE2A47D48100BDBFDB /* LoginHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */; };
 		FF6AD8052A5BB78F001DCA91 /* AppleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF6AD8042A5BB78F001DCA91 /* AppleButton.swift */; };
+		FFDE7DB02A5E3772002F7881 /* Page1View.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDE7DAF2A5E3772002F7881 /* Page1View.swift */; };
 		FFF4519F2A47C67900729F41 /* LehighFoodFinderApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF4519E2A47C67900729F41 /* LehighFoodFinderApp.swift */; };
 		FFF451A32A47C67C00729F41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFF451A22A47C67C00729F41 /* Assets.xcassets */; };
 		FFF451A62A47C67D00729F41 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FFF451A52A47C67D00729F41 /* Preview Assets.xcassets */; };
@@ -27,6 +28,7 @@
 		FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleButton.swift; sourceTree = "<group>"; };
 		FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHeader.swift; sourceTree = "<group>"; };
 		FF6AD8042A5BB78F001DCA91 /* AppleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleButton.swift; sourceTree = "<group>"; };
+		FFDE7DAF2A5E3772002F7881 /* Page1View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Page1View.swift; sourceTree = "<group>"; };
 		FFF4519B2A47C67900729F41 /* LehighFoodFinder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LehighFoodFinder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF4519E2A47C67900729F41 /* LehighFoodFinderApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LehighFoodFinderApp.swift; sourceTree = "<group>"; };
 		FFF451A22A47C67C00729F41 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -74,6 +76,7 @@
 				FFF4519E2A47C67900729F41 /* LehighFoodFinderApp.swift */,
 				FFF451BF2A47C81100729F41 /* GoogleSignInManager.swift */,
 				FFF451C32A47C84200729F41 /* HomeViewModel.swift */,
+				FFDE7DAF2A5E3772002F7881 /* Page1View.swift */,
 				FFF451C52A47C85700729F41 /* LoginView.swift */,
 				FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */,
 				FF6AD8042A5BB78F001DCA91 /* AppleButton.swift */,
@@ -176,6 +179,7 @@
 				FFF451C02A47C81100729F41 /* GoogleSignInManager.swift in Sources */,
 				FFF451C42A47C84200729F41 /* HomeViewModel.swift in Sources */,
 				FFF4519F2A47C67900729F41 /* LehighFoodFinderApp.swift in Sources */,
+				FFDE7DB02A5E3772002F7881 /* Page1View.swift in Sources */,
 				FF48A4BC2A47D47600BDBFDB /* GoogleButton.swift in Sources */,
 				FF48A4BE2A47D48100BDBFDB /* LoginHeader.swift in Sources */,
 				FFF451C62A47C85700729F41 /* LoginView.swift in Sources */,

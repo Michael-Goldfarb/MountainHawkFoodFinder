@@ -8,6 +8,8 @@
 
 import SwiftUI
 import Combine
+// import FirebaseAnalytics
+// import FirebaseAnalyticsSwift
 
 class HomeViewModel: ObservableObject {
   @Published var betAmount: Double = 10.0
@@ -53,6 +55,7 @@ struct HomeView: View {
     .navigationTitle("Sports Betting")
   }
 }
+
 struct User: Codable {
 //    let name: String?
     let name: String?
