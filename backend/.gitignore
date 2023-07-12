@@ -35,3 +35,6 @@ build/
 ### Application Properties ###
 /application.properties
 /application.yml
+
+### macOS ###
+.DS_Store
