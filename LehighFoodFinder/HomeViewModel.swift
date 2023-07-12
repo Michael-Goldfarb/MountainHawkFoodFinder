@@ -7,65 +7,103 @@
 
 
 import SwiftUI
-import Combine
-// import FirebaseAnalytics
-// import FirebaseAnalyticsSwift
+import MapKit
 
-class HomeViewModel: ObservableObject {
-  @Published var betAmount: Double = 10.0
-
-  private var defaults = UserDefaults.standard
-  private let betAmountKey = "betAmount"
-  private var cancellables = Set<AnyCancellable>()
-
-  init() {
-    if let amount = defaults.object(forKey: betAmountKey) as? Double {
-      betAmount = amount
+struct MapBackgroundView: UIViewRepresentable {
+    typealias UIViewType = MKMapView
+    
+    func makeUIView(context: Context) -> MKMapView {
+        let mapView = MKMapView(frame: .zero)
+        mapView.delegate = context.coordinator
+        
+        let lehighUniversityCoordinate = CLLocationCoordinate2D(latitude: 40.6074, longitude: -75.3766)
+        let region = MKCoordinateRegion(center: lehighUniversityCoordinate, span: MKCoordinateSpan(latitudeDelta: 0.02, longitudeDelta: 0.02))
+        mapView.setRegion(region, animated: false)
+        
+        // Add annotations
+        let rathboneAnnotation = CustomAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40.606703, longitude: -75.372916),  title: "Rathbone Dining Hall")
+        mapView.addAnnotation(rathboneAnnotation)
+        
+        return mapView
     }
-    $betAmount
-      .sink { amount in
-        self.defaults.set(amount, forKey: self.betAmountKey)
-      }
-      .store(in: &cancellables)
-  }
+    
+    func updateUIView(_ uiView: MKMapView, context: Context) {
+        // Perform any necessary updates to the map view
+        // You can configure the map view properties, add annotations, etc.
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+    
+    class Coordinator: NSObject, MKMapViewDelegate {
+        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+            // Handle annotation selection here
+            if let annotation = view.annotation as? CustomAnnotation {
+                if annotation.title == "Rathbone Dining Hall" {
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window = windowScene.windows.first {
+                        let rathboneDetailsView = RathboneDetailsView()
+                        let hostingController = UIHostingController(rootView: rathboneDetailsView)
+                        
+                        // Push the UIHostingController onto the navigation stack
+                        if let navigationController = window.rootViewController as? UINavigationController {
+                            navigationController.pushViewController(hostingController, animated: true)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
+class CustomAnnotation: NSObject, MKAnnotation {
+    let coordinate: CLLocationCoordinate2D
+    let title: String?
+    
+    init(coordinate: CLLocationCoordinate2D, title: String?) {
+        self.coordinate = coordinate
+        self.title = title
+    }
+}
+
+
 
 struct HomeView: View {
-  @StateObject var viewModel = HomeViewModel()
-
-  var body: some View {
-    VStack {
-      Text("Place your bet")
-        .font(.title)
-        .multilineTextAlignment(.center)
-      Spacer()
-      Stepper(value: $viewModel.betAmount, in: 0...100, step: 10) {
-        Text("$\(viewModel.betAmount)")
-      }
+    var body: some View {
+        NavigationView {
+            ZStack {
+                MapBackgroundView() // Use the custom map view as the background
+                    .edgesIgnoringSafeArea(.all)
+            }
+            .navigationBarTitle("Home", displayMode: .inline)
+        }
     }
-    .frame(maxHeight: 150)
-    .foregroundColor(.white)
-    .padding()
-    #if os(iOS)
-    .background(Color(UIColor.systemBlue))
-    #endif
-    .clipShape(RoundedRectangle(cornerRadius: 16))
-    .padding()
-    .shadow(radius: 8)
-    .navigationTitle("Sports Betting")
-  }
 }
 
+
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView()
+    }
+}
+
+
+
 struct User: Codable {
-//    let name: String?
     let name: String?
     let email: String
 }
+//
+//struct HomeView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    NavigationStack {
+//      HomeView()
+//    }
+//  }
+//}
 
-struct HomeView_Previews: PreviewProvider {
-  static var previews: some View {
-    NavigationStack {
-      HomeView()
-    }
-  }
-}
+//struct User: Codable {
+//    let name: String?
+//    let email: String
+//}
