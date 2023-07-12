@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://rajje.db.elephantsql.com:5432/syabkhtb
+    username: syabkhtb
+    password: J7LXI5pNQ_UoUP316yEd-yoXnCOZK8HE
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+          client-id: 23678436649-c3vdliak67h8kmffq964qrh27jc50beg.apps.googleusercontent.com
+          client-secret: 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
+          scope:
+            - email
+            - profile
+            - name
+
+logging:
+  level:
+    org.springframework: info
+    org.hibernate: info
+
+server:
+  port: 8000
