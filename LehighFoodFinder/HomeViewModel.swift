@@ -110,8 +110,10 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                MapBackgroundView()
-                    .edgesIgnoringSafeArea(.all)
+                if !navigationState.isButtonClicked { // Only display MapBackgroundView if isButtonClicked is false
+                    MapBackgroundView()
+                        .edgesIgnoringSafeArea(.all)
+                }
                 
                 if navigationState.isButtonClicked {
                     RathboneDetailsView()
@@ -121,6 +123,7 @@ struct HomeView: View {
         }
     }
 }
+
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
