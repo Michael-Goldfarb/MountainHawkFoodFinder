@@ -12,16 +12,20 @@ struct RathboneDetailsView: View {
             List {
                 ForEach(mealTypes, id: \.self) { mealType in
                     Section(header: Text(mealType)) {
-                        ForEach(rathboneOptions.filter({ $0.mealType == mealType })) { rathbone in
-                            VStack(alignment: .leading) {
-                                Text(rathbone.menuItemName)
-                                    .font(.headline)
-                                Text("Calories: \(rathbone.calorieText ?? "N/A")")
-                                    .font(.subheadline)
-                                Text("Allergens: \(rathbone.allergenNames)")
-                                    .font(.subheadline)
+                        ForEach(courseNames(for: mealType), id: \.self) { courseName in
+                            Section(header: Text(courseName)) {
+                                ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
+                                    VStack(alignment: .leading) {
+                                        Text(rathbone.menuItemName)
+                                            .font(.headline)
+                                        Text("Calories: \(rathbone.calorieText ?? "N/A")")
+                                            .font(.subheadline)
+                                        Text("Allergens: \(rathbone.allergenNames)")
+                                            .font(.subheadline)
+                                    }
+                                    .padding()
+                                }
                             }
-                            .padding()
                         }
                     }
                 }
@@ -61,6 +65,19 @@ struct RathboneDetailsView: View {
         let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
         let sortedMealTypes = ["breakfast", "lunch", "dinner"].filter({ uniqueMealTypes.contains($0) })
         return sortedMealTypes
+    }
+
+    private func courseNames(for mealType: String) -> [String] {
+        let uniqueCourseNames = Set(rathbones(for: mealType).map({ $0.courseName }))
+        return Array(uniqueCourseNames)
+    }
+
+    private func rathbones(for mealType: String) -> [Rathbone] {
+        return rathboneOptions.filter({ $0.mealType == mealType })
+    }
+
+    private func rathbones(for mealType: String, courseName: String) -> [Rathbone] {
+        return rathbones(for: mealType).filter({ $0.courseName == courseName })
     }
 }
 
