@@ -13,7 +13,7 @@ struct RathboneDetailsView: View {
                 ForEach(mealTypes, id: \.self) { mealType in
                     Section(header: headerView(for: mealType)) {
                         ForEach(courseNames(for: mealType), id: \.self) { courseName in
-                            Section(header: courseHeaderView(for: courseName)) {
+                            Section(header: Text(courseName)) {
                                 ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
                                     VStack(alignment: .leading) {
                                         Text(rathbone.menuItemName)
@@ -84,13 +84,6 @@ struct RathboneDetailsView: View {
     private func headerView(for mealType: String) -> some View {
         Text(mealType)
             .font(.headline)
-            .frame(maxWidth: .infinity, alignment: .center)
-    }
-
-    // Custom section header view for courseName
-    private func courseHeaderView(for courseName: String) -> some View {
-        Text(courseName)
-            .font(.subheadline)
             .frame(maxWidth: .infinity, alignment: .center)
     }
 }
