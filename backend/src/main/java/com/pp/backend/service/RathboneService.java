@@ -1,4 +1,5 @@
 package com.pp.backend.service;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -19,17 +20,22 @@ public class RathboneService {
         List<Rathbone> rathbones = new ArrayList<>();
 
         try (Connection connection = dataSource.getConnection()) {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM rathboneOptions")) {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, fr.upvotes, fr.downvotes " +
+                            "FROM rathboneOptions r " +
+                            "LEFT JOIN foodRatings fr ON r.menu_item_name = fr.item_name")) {
                 ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
                     Rathbone rathbone = new Rathbone();
-                    rathbone.setId(resultSet.getLong("id")); // Added to retrieve the primary key
+                    rathbone.setId(resultSet.getLong("id"));
                     rathbone.setMealType(resultSet.getString("meal_type"));
                     rathbone.setCourseName(resultSet.getString("course_name"));
                     rathbone.setMenuItemName(resultSet.getString("menu_item_name"));
                     rathbone.setCalorieText(resultSet.getString("calorie_text"));
                     rathbone.setAllergenNames(resultSet.getString("allergen_names"));
+                    rathbone.setUpvotes(resultSet.getInt("upvotes"));
+                    rathbone.setDownvotes(resultSet.getInt("downvotes"));
                     rathbones.add(rathbone);
                 }
             }
@@ -39,6 +45,9 @@ public class RathboneService {
 
         return rathbones;
     }
+
+
+
 
     public Rathbone createRathboneOption(Rathbone rathbone) {
         String sql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names) VALUES (?, ?, ?, ?, ?)";
@@ -67,5 +76,19 @@ public class RathboneService {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void updateFoodRatings(long rathboneId, int upvotes, int downvotes) {
+        String sql = "UPDATE foodRatings SET upvotes = ?, downvotes = ? WHERE id = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, upvotes);
+            statement.setInt(2, downvotes);
+            statement.setLong(3, rathboneId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

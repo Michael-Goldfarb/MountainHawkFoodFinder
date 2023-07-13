@@ -15,17 +15,24 @@ public class Rathbone {
     private String menuItemName;
     private String calorieText;
     private String allergenNames;
+    private int upvotes;
+    private int downvotes;
 
     public Rathbone() {
     }
 
-    public Rathbone(String mealType, String courseName, String menuItemName, String calorieText, String allergenNames) {
+    public Rathbone(String mealType, String courseName, String menuItemName, String calorieText, String allergenNames,
+            int upvotes, int downvotes) {
         this.mealType = mealType;
         this.courseName = courseName;
         this.menuItemName = menuItemName;
         this.calorieText = calorieText;
         this.allergenNames = allergenNames;
+        this.upvotes = upvotes;
+        this.downvotes = downvotes;
     }
+
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -73,5 +80,21 @@ public class Rathbone {
 
     public void setAllergenNames(String allergenNames) {
         this.allergenNames = allergenNames;
+    }
+
+    public int getUpvotes() {
+        return upvotes;
+    }
+
+    public void setUpvotes(int upvotes) {
+        this.upvotes = upvotes;
+    }
+
+    public int getDownvotes() {
+        return downvotes;
+    }
+
+    public void setDownvotes(int downvotes) {
+        this.downvotes = downvotes;
     }
 }
