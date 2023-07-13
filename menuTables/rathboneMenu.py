@@ -15,6 +15,7 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 cursor.execute("""
     CREATE TABLE IF NOT EXISTS rathboneOptions (
+        id SERIAL PRIMARY KEY,
         meal_type VARCHAR(100),
         course_name VARCHAR(100),
         menu_item_name VARCHAR(100),

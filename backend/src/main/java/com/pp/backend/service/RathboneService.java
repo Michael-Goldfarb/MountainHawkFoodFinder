@@ -24,6 +24,7 @@ public class RathboneService {
 
                 while (resultSet.next()) {
                     Rathbone rathbone = new Rathbone();
+                    rathbone.setId(resultSet.getLong("id")); // Added to retrieve the primary key
                     rathbone.setMealType(resultSet.getString("meal_type"));
                     rathbone.setCourseName(resultSet.getString("course_name"));
                     rathbone.setMenuItemName(resultSet.getString("menu_item_name"));
@@ -43,7 +44,7 @@ public class RathboneService {
         String sql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, rathbone.getMealType());
             statement.setString(2, rathbone.getCourseName());
@@ -53,10 +54,15 @@ public class RathboneService {
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
-                return rathbone;
-            } else {
-                throw new SQLException("Unable to create Rathbone option");
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        rathbone.setId(generatedKeys.getLong(1)); // Added to set the generated primary key
+                        return rathbone;
+                    }
+                }
             }
+
+            throw new SQLException("Unable to create Rathbone option");
         } catch (SQLException e) {
             e.printStackTrace();
         }
