@@ -5,12 +5,21 @@
 //  Created by Michael Goldfarb on 6/10/23.
 //
 
-
 import SwiftUI
 import MapKit
 
+class NavigationState: ObservableObject {
+    @Published var isButtonClicked = false
+    
+    func navigateToRathboneDetails() {
+        isButtonClicked = true
+    }
+}
+
 struct MapBackgroundView: UIViewRepresentable {
     typealias UIViewType = MKMapView
+    
+    @EnvironmentObject var navigationState: NavigationState
     
     func makeUIView(context: Context) -> MKMapView {
         let mapView = MKMapView(frame: .zero)
@@ -21,7 +30,7 @@ struct MapBackgroundView: UIViewRepresentable {
         mapView.setRegion(region, animated: false)
         
         // Add annotations
-        let rathboneAnnotation = CustomAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40.606703, longitude: -75.372916),  title: "Rathbone Dining Hall")
+        let rathboneAnnotation = CustomAnnotation(coordinate: CLLocationCoordinate2D(latitude: 40.606703, longitude: -75.372916), title: "Rathbone Dining Hall")
         mapView.addAnnotation(rathboneAnnotation)
         
         return mapView
@@ -33,24 +42,40 @@ struct MapBackgroundView: UIViewRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
-        Coordinator()
+        Coordinator(self)
     }
     
     class Coordinator: NSObject, MKMapViewDelegate {
-        func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-            // Handle annotation selection here
+        var mapBackgroundView: MapBackgroundView
+        
+        init(_ mapBackgroundView: MapBackgroundView) {
+            self.mapBackgroundView = mapBackgroundView
+        }
+        
+        func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+            guard let annotation = annotation as? CustomAnnotation else {
+                return nil
+            }
+            
+            let identifier = "CustomAnnotation"
+            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+            
+            if annotationView == nil {
+                annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+                annotationView?.canShowCallout = true
+                annotationView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
+            } else {
+                annotationView?.annotation = annotation
+            }
+            
+            return annotationView
+        }
+        
+        func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
             if let annotation = view.annotation as? CustomAnnotation {
                 if annotation.title == "Rathbone Dining Hall" {
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first {
-                        let rathboneDetailsView = RathboneDetailsView()
-                        let hostingController = UIHostingController(rootView: rathboneDetailsView)
-                        
-                        // Push the UIHostingController onto the navigation stack
-                        if let navigationController = window.rootViewController as? UINavigationController {
-                            navigationController.pushViewController(hostingController, animated: true)
-                        }
-                    }
+                    print("We almost there")
+                    mapBackgroundView.navigationState.navigateToRathboneDetails()
                 }
             }
         }
@@ -67,26 +92,53 @@ class CustomAnnotation: NSObject, MKAnnotation {
     }
 }
 
-
+class NavigationManager {
+    static let shared = NavigationManager()
+    
+    private init() {}
+    
+    func navigateToRathboneDetails() {
+        // Perform navigation to RathboneDetailsView
+        // You can replace this with your desired navigation method
+        print("Navigating to RathboneDetailsView")
+    }
+}
 
 struct HomeView: View {
+    @EnvironmentObject var navigationState: NavigationState
+    
     var body: some View {
         NavigationView {
             ZStack {
-                MapBackgroundView() // Use the custom map view as the background
+                MapBackgroundView()
                     .edgesIgnoringSafeArea(.all)
+                
+                if navigationState.isButtonClicked {
+                    RathboneDetailsView()
+                }
             }
             .navigationBarTitle("Home", displayMode: .inline)
         }
     }
 }
 
-
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView()
+            .environmentObject(NavigationState()) // Provide the NavigationState environment object
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -94,16 +146,3 @@ struct User: Codable {
     let name: String?
     let email: String
 }
-//
-//struct HomeView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    NavigationStack {
-//      HomeView()
-//    }
-//  }
-//}
-
-//struct User: Codable {
-//    let name: String?
-//    let email: String
-//}
