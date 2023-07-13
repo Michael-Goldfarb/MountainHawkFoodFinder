@@ -145,7 +145,7 @@ struct HomeView_Previews: PreviewProvider {
 
 
 
-struct User: Codable {
-    let name: String?
-    let email: String
-}
+//struct User: Codable {
+//    let name: String?
+//    let email: String
+//}

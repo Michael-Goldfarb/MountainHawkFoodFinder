@@ -89,6 +89,11 @@ class GoogleSignInManager: NSObject, ObservableObject {
         }
     }
     
+    struct User: Codable {
+        let name: String?
+        let email: String
+    }
+    
 //    private func fetchUserData() {
 //        let currUser = Auth.auth().currentUser
 //        if let currUser = currUser {
