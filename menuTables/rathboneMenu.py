@@ -68,12 +68,11 @@ try:
             # Extract the menu item names and calorie amounts
             for item in menu_items:
                 menu_item_name = item['data-fooditemname']
+                if menu_item_name == "Have A Nice Day!":
+                    continue  # Skip the row if menuItemName is "Have A Nice Day!"
                 calorie_element = item.find_next('a', class_='get-nutrition')
                 calorie_text = calorie_element.text.strip() if calorie_element else '0'
                 calorie_text = calorie_text.replace("cal", "")
-                if menu_item_name == "Have A Nice Day!":
-                    menu_item_name = "None"
-                    calorie_text = None
                 print(f"{menu_item_name}: {calorie_text} calories")
                 # Extract the allergens
                 allergens_div = item.find_next('div', id=lambda x: x and x.startswith('allergens-'))
