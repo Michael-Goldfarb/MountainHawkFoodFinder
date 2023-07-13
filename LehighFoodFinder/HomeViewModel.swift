@@ -131,21 +131,3 @@ struct HomeView_Previews: PreviewProvider {
             .environmentObject(NavigationState()) // Provide the NavigationState environment object
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//struct User: Codable {
-//    let name: String?
-//    let email: String
-//}

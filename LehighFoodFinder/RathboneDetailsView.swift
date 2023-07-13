@@ -9,17 +9,22 @@ struct RathboneDetailsView: View {
                 .font(.title)
                 .padding()
 
-            List(rathboneOptions.indices, id: \.self) { index in
-                let rathbone = rathboneOptions[index]
-                VStack(alignment: .leading) {
-                    Text(rathbone.menuItemName)
-                        .font(.headline)
-                    Text("Calories: \(rathbone.calorieText ?? "N/A")")
-                        .font(.subheadline)
-                    Text("Allergens: \(rathbone.allergenNames)")
-                        .font(.subheadline)
+            List {
+                ForEach(mealTypes, id: \.self) { mealType in
+                    Section(header: Text(mealType)) {
+                        ForEach(rathboneOptions.filter({ $0.mealType == mealType })) { rathbone in
+                            VStack(alignment: .leading) {
+                                Text(rathbone.menuItemName)
+                                    .font(.headline)
+                                Text("Calories: \(rathbone.calorieText ?? "N/A")")
+                                    .font(.subheadline)
+                                Text("Allergens: \(rathbone.allergenNames)")
+                                    .font(.subheadline)
+                            }
+                            .padding()
+                        }
+                    }
                 }
-                .padding()
             }
 
             Spacer()
@@ -51,18 +56,22 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
+
+    private var mealTypes: [String] {
+        let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
+        let sortedMealTypes = ["breakfast", "lunch", "dinner"].filter({ uniqueMealTypes.contains($0) })
+        return sortedMealTypes
+    }
 }
 
-
-struct Rathbone: Codable {
-    let id: String?
+struct Rathbone: Codable, Identifiable {
+    let id: Int
     let mealType: String
     let courseName: String
     let menuItemName: String
     let calorieText: String?
     let allergenNames: String
 }
-
 
 struct RathboneDetailsView_Previews: PreviewProvider {
     static var previews: some View {
