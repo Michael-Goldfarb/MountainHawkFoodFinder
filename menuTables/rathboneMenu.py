@@ -95,7 +95,6 @@ insert_query = """
 """
 cursor.executemany(insert_query, data_to_insert)
 conn.commit()
-
 # Close the cursor and connection
 cursor.close()
 conn.close()

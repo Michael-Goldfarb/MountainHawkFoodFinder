@@ -7,6 +7,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pp.backend.service.UserService;
+import com.pp.backend.service.RathboneService;
 
 @Configuration
 public class AppConfig {
@@ -46,5 +47,10 @@ public class AppConfig {
     @Bean
     public UserService userService(DataSource dataSource) {
         return new UserService(dataSource);
+    }
+
+    @Bean
+    public RathboneService rathboneService(DataSource dataSource) {
+        return new RathboneService(dataSource);
     }
 }
