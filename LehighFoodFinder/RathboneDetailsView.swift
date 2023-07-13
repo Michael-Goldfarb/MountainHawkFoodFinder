@@ -11,9 +11,9 @@ struct RathboneDetailsView: View {
 
             List {
                 ForEach(mealTypes, id: \.self) { mealType in
-                    Section(header: Text(mealType)) {
+                    Section(header: headerView(for: mealType)) {
                         ForEach(courseNames(for: mealType), id: \.self) { courseName in
-                            Section(header: Text(courseName)) {
+                            Section(header: courseHeaderView(for: courseName)) {
                                 ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
                                     VStack(alignment: .leading) {
                                         Text(rathbone.menuItemName)
@@ -78,6 +78,20 @@ struct RathboneDetailsView: View {
 
     private func rathbones(for mealType: String, courseName: String) -> [Rathbone] {
         return rathbones(for: mealType).filter({ $0.courseName == courseName })
+    }
+    
+    // Custom section header view for mealType
+    private func headerView(for mealType: String) -> some View {
+        Text(mealType)
+            .font(.headline)
+            .frame(maxWidth: .infinity, alignment: .center)
+    }
+
+    // Custom section header view for courseName
+    private func courseHeaderView(for courseName: String) -> some View {
+        Text(courseName)
+            .font(.subheadline)
+            .frame(maxWidth: .infinity, alignment: .center)
     }
 }
 
