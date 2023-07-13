@@ -35,8 +35,9 @@ struct LehighFoodFinderApp: App {
     
     var body: some Scene {
         WindowGroup {
-            LoginView()
-                .environmentObject(navigationState)
+//            LoginView()
+//                .environmentObject(navigationState)
+            RathboneDetailsView()
         }
     }
 }
