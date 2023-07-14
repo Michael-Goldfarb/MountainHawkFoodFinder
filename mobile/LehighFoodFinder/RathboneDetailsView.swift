@@ -100,24 +100,69 @@ struct RathboneDetailsView: View {
     }
     
     private func upvoteRathbone(_ rathbone: Rathbone) {
-            if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
-                // Check if the rathbone has already been upvoted
-                if rathboneOptions[index].upvotes == 0 {
-                    rathboneOptions[index].upvotes += 1
-                    rathboneOptions[index].downvotes = 0  // Reset downvotes to 0
-                }
-            }
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)?upvoted=true&downvoted=false") else {
+            return
         }
 
-        private func downvoteRathbone(_ rathbone: Rathbone) {
-            if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
-                // Check if the rathbone has already been downvoted
-                if rathboneOptions[index].downvotes == 0 {
-                    rathboneOptions[index].downvotes += 1
-                    rathboneOptions[index].upvotes = 0  // Reset upvotes to 0
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error upvoting Rathbone:", error)
+            } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                DispatchQueue.main.async {
+                    if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
+                        // Check if the rathbone has already been upvoted or downvoted
+                        if rathboneOptions[index].upvotes == 0 && rathboneOptions[index].downvotes == 0 {
+                            rathboneOptions[index].upvotes += 1
+                            rathboneOptions[index].downvotes = 0  // Reset downvotes to 0
+                        } else if rathboneOptions[index].upvotes == 0 && rathboneOptions[index].downvotes == 1 {
+                            rathboneOptions[index].upvotes += 1
+                            rathboneOptions[index].downvotes -= 1
+                        }
+                    }
                 }
+                print("Rathbone upvoted successfully")
+            } else {
+                print("Failed to upvote Rathbone")
             }
+        }.resume()
+    }
+
+    private func downvoteRathbone(_ rathbone: Rathbone) {
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)?upvoted=false&downvoted=true") else {
+            return
         }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error downvoting Rathbone:", error)
+            } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                DispatchQueue.main.async {
+                    if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
+                        // Check if the rathbone has already been upvoted or downvoted
+                        if rathboneOptions[index].downvotes == 0 && rathboneOptions[index].upvotes == 0 {
+                            rathboneOptions[index].downvotes += 1
+                            rathboneOptions[index].upvotes = 0  // Reset upvotes to 0
+                        } else if rathboneOptions[index].downvotes == 0 && rathboneOptions[index].upvotes == 1 {
+                            rathboneOptions[index].downvotes += 1
+                            rathboneOptions[index].upvotes -= 1
+                        }
+                    }
+                }
+                print("Rathbone downvoted successfully")
+            } else {
+                print("Failed to downvote Rathbone")
+            }
+        }.resume()
+    }
+
+
+
+
+
 
 
 

@@ -108,19 +108,39 @@ public class RathboneService {
         return null;
     }
 
-    public void updateFoodRatings(long rathboneId, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {
-        String sql = "UPDATE foodRatings SET upvotes = ?, downvotes = ? WHERE id = ?";
+    public void updateFoodRatings(String itemName, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {
+        String selectSql = "SELECT COUNT(*) AS count FROM foodRatings WHERE item_name = ?";
 
         try (Connection connection = dataSource.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, upvotes);
-            statement.setInt(2, downvotes);
-            statement.setLong(3, rathboneId);
-            statement.executeUpdate();
+            PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
+            selectStatement.setString(1, itemName);
+            ResultSet resultSet = selectStatement.executeQuery();
+
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                if (count == 0) {
+                    // Insert a new record if the item name doesn't exist in the table
+                    insertFoodRating(itemName, upvotes, downvotes, upvoted, downvoted);
+                } else {
+                    // Update the existing record with the latest upvote/downvote values
+                    String updateSql = "UPDATE foodRatings SET upvotes = ?, downvotes = ?, upvoted = ?, downvoted = ? WHERE item_name = ?";
+                    try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+                        updateStatement.setInt(1, upvotes);
+                        updateStatement.setInt(2, downvotes);
+                        updateStatement.setBoolean(3, upvoted);
+                        updateStatement.setBoolean(4, downvoted);
+                        updateStatement.setString(5, itemName);
+                        updateStatement.executeUpdate();
+                    }
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+
+
 
 
     public void insertFoodRating(String itemName, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {

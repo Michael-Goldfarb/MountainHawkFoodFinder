@@ -23,8 +23,9 @@ public class Rathbone {
     public Rathbone() {
     }
 
-    public Rathbone(String mealType, String courseName, String menuItemName, String calorieText, String allergenNames,
-            int upvotes, int downvotes, Boolean upvoted, Boolean downvoted) {
+    public Rathbone(Long id, String mealType, String courseName, String menuItemName, String calorieText,
+                    String allergenNames, int upvotes, int downvotes, Boolean upvoted, Boolean downvoted) {
+        this.id = id;
         this.mealType = mealType;
         this.courseName = courseName;
         this.menuItemName = menuItemName;
