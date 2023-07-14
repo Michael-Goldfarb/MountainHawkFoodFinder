@@ -5,7 +5,7 @@ struct RathboneDetailsView: View {
 
     var body: some View {
         VStack {
-            Text("Rathbone Dining Hall Details")
+            Text("Rathbone Dining Hall")
                 .font(.title)
                 .padding()
 
@@ -27,7 +27,7 @@ struct RathboneDetailsView: View {
                                                     }
                                             }
                                         }
-                                        Text("Menu Item: \(rathbone.menuItemName)")
+                                        Text("\(rathbone.menuItemName)")
                                             .font(.headline) // Increase the font size
                                             .padding(.top, 4)
                                         Text("Calories: \(rathbone.calorieText ?? "N/A")")
@@ -74,9 +74,14 @@ struct RathboneDetailsView: View {
         }.resume()
     }
 
+//    private var mealTypes: [String] {
+//        let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
+//        let sortedMealTypes = ["breakfast", "lunch", "dinner"].filter({ uniqueMealTypes.contains($0) })
+//        return sortedMealTypes
+//    }
     private var mealTypes: [String] {
         let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
-        let sortedMealTypes = ["breakfast", "lunch", "dinner"].filter({ uniqueMealTypes.contains($0) })
+        let sortedMealTypes = uniqueMealTypes.sorted()
         return sortedMealTypes
     }
 

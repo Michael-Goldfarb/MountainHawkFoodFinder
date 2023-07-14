@@ -21,7 +21,8 @@ public class RathboneService {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
                     "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, " +
-                    "f.givenStars, f.totalGivenStars, f.totalMaxStars, f.averageStars " +
+                    "f.givenStars, f.totalGivenStars, f.totalMaxStars, " +
+                    "CASE WHEN f.totalMaxStars > 0 THEN (f.totalGivenStars * 1.0) / (f.totalMaxStars * 1.0 / 5.0) ELSE 0 END AS averageStars " +
                     "FROM rathboneOptions r " +
                     "LEFT JOIN foodRatings f ON r.menu_item_name = f.item_name")) {
                 ResultSet resultSet = statement.executeQuery();
@@ -50,6 +51,7 @@ public class RathboneService {
 
 
 
+
     public Rathbone createRathboneOption(Rathbone rathbone) {
         String sql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names, givenStars, totalGivenStars, totalMaxStars, averageStars) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
@@ -66,12 +68,12 @@ public class RathboneService {
             statement.setInt(6, rathbone.getGivenStars());
             statement.setInt(7, rathbone.getTotalGivenStars());
             statement.setInt(8, rathbone.getTotalMaxStars());
-            statement.setDouble(9, rathbone.getAverageStars());
 
             ResultSet resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
                 rathbone.setId(resultSet.getLong("id"));
+                rathbone.setAverageStars((double) rathbone.getTotalGivenStars() / rathbone.getTotalMaxStars() / 5.0);
                 return rathbone;
             }
 
@@ -134,7 +136,7 @@ public class RathboneService {
             if (resultSet.next()) {
                 totalGivenStars += givenStars;
                 totalMaxStars += 5;
-                averageStars = (double) totalGivenStars / totalMaxStars;
+                averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
 
                 updateStatement.setInt(1, givenStars);
                 updateStatement.setInt(2, totalGivenStars);
