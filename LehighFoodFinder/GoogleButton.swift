@@ -11,27 +11,31 @@ struct GoogleButton: View {
     var action: () -> Void
     
     var body: some View {
-        Button {
-            action()
-        } label: {
-            ZStack{
-                Circle()
-                    .foregroundColor(.white)
-                    .shadow(color: .gray, radius: 4, x: 0, y: 2)
+        Button(action: action) {
+            HStack(spacing: 2) { // Adjust the spacing as desired
+                Spacer()
                 
                 Image("google")
                     .resizable()
-                    .scaledToFit()
-                    .padding(8)
-                    .mask(
-                        Circle()
-                    )
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 24, height: 24)
+                
+                Text("   Continue with Google")
+                    .font(.system(size: 22))
+                    .foregroundColor(.black)
+                    .padding(.leading, -4) // Adjust the leading padding as desired
+                
+                Spacer()
             }
-            
+            .padding(12)
+            .background(Color.white)
+            .cornerRadius(25)
+            .shadow(color: .gray, radius: 4, x: 0, y: 2)
         }
-        .frame(width: 50, height: 50)
+        .frame(height: 50)
     }
 }
+
 
 struct GoogleButton_Previews: PreviewProvider {
     static var previews: some View {
