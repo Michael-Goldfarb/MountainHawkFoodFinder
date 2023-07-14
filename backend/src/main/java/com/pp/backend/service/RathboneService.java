@@ -1,5 +1,4 @@
 package com.pp.backend.service;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -123,6 +122,7 @@ public class RathboneService {
 
             if (resultSet.next()) {
                 // Item name exists, perform update
+                System.out.println("updating");
                 long id = resultSet.getLong("id");
                 updateStatement.setInt(1, upvotes);
                 updateStatement.setInt(2, downvotes);
@@ -130,6 +130,7 @@ public class RathboneService {
                 updateStatement.executeUpdate();
             } else {
                 // Item name does not exist, perform insert
+                System.out.println("inserting");
                 insertStatement.setString(1, itemName);
                 insertStatement.setInt(2, upvotes);
                 insertStatement.setInt(3, downvotes);
