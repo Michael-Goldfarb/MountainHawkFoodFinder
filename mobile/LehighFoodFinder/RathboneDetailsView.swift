@@ -113,12 +113,11 @@ struct RathboneDetailsView: View {
                 DispatchQueue.main.async {
                     if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
                         // Check if the rathbone has already been upvoted or downvoted
-                        if rathboneOptions[index].upvotes == 0 && rathboneOptions[index].downvotes == 0 {
+                        if !rathboneOptions[index].upvoted && !rathboneOptions[index].downvoted {
                             rathboneOptions[index].upvotes += 1
+                            rathboneOptions[index].upvoted = true
                             rathboneOptions[index].downvotes = 0  // Reset downvotes to 0
-                        } else if rathboneOptions[index].upvotes == 0 && rathboneOptions[index].downvotes == 1 {
-                            rathboneOptions[index].upvotes += 1
-                            rathboneOptions[index].downvotes -= 1
+                            rathboneOptions[index].downvoted = false
                         }
                     }
                 }
@@ -143,12 +142,11 @@ struct RathboneDetailsView: View {
                 DispatchQueue.main.async {
                     if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
                         // Check if the rathbone has already been upvoted or downvoted
-                        if rathboneOptions[index].downvotes == 0 && rathboneOptions[index].upvotes == 0 {
+                        if !rathboneOptions[index].downvoted && !rathboneOptions[index].upvoted {
                             rathboneOptions[index].downvotes += 1
+                            rathboneOptions[index].downvoted = true
                             rathboneOptions[index].upvotes = 0  // Reset upvotes to 0
-                        } else if rathboneOptions[index].downvotes == 0 && rathboneOptions[index].upvotes == 1 {
-                            rathboneOptions[index].downvotes += 1
-                            rathboneOptions[index].upvotes -= 1
+                            rathboneOptions[index].upvoted = false
                         }
                     }
                 }
@@ -158,6 +156,7 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
+
 
 
 
@@ -185,17 +184,21 @@ struct Rathbone: Codable, Identifiable {
     let allergenNames: String
     var upvotes: Int
     var downvotes: Int
-    
-    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, upvotes: Int, downvotes: Int) {
-        self.id = id
-        self.mealType = mealType
-        self.courseName = courseName
-        self.menuItemName = menuItemName
-        self.calorieText = calorieText
-        self.allergenNames = allergenNames
-        self.upvotes = upvotes
-        self.downvotes = downvotes
-    }
+    var upvoted: Bool  // New property
+    var downvoted: Bool  // New property
+        
+    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, upvotes: Int, downvotes: Int, upvoted: Bool, downvoted: Bool) {
+            self.id = id
+            self.mealType = mealType
+            self.courseName = courseName
+            self.menuItemName = menuItemName
+            self.calorieText = calorieText
+            self.allergenNames = allergenNames
+            self.upvotes = upvotes
+            self.downvotes = downvotes
+            self.upvoted = upvoted
+            self.downvoted = downvoted
+        }
 }
 
 struct RathboneDetailsView_Previews: PreviewProvider {
