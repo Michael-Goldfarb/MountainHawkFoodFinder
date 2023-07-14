@@ -108,37 +108,38 @@ public class RathboneService {
         return null;
     }
 
-    public void updateFoodRatings(String itemName, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {
-        String selectSql = "SELECT COUNT(*) AS count FROM foodRatings WHERE item_name = ?";
+    public void updateFoodRatings(String itemName, int upvotes, int downvotes) {
+        String selectSql = "SELECT id FROM foodRatings WHERE item_name = ?";
+        String insertSql = "INSERT INTO foodRatings (item_name, upvotes, downvotes) VALUES (?, ?, ?)";
+        String updateSql = "UPDATE foodRatings SET upvotes = ?, downvotes = ? WHERE item_name = ?";
 
         try (Connection connection = dataSource.getConnection();
-            PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
+            PreparedStatement selectStatement = connection.prepareStatement(selectSql);
+            PreparedStatement insertStatement = connection.prepareStatement(insertSql);
+            PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+
             selectStatement.setString(1, itemName);
             ResultSet resultSet = selectStatement.executeQuery();
 
             if (resultSet.next()) {
-                int count = resultSet.getInt("count");
-                if (count == 0) {
-                    // Insert a new record if the item name doesn't exist in the table
-                    insertFoodRating(itemName, upvotes, downvotes, upvoted, downvoted);
-                } else {
-                    // Update the existing record with the latest upvote/downvote values
-                    String updateSql = "UPDATE foodRatings SET upvotes = ?, downvotes = ?, upvoted = ?, downvoted = ? WHERE item_name = ?";
-                    try (PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
-                        updateStatement.setInt(1, upvotes);
-                        updateStatement.setInt(2, downvotes);
-                        updateStatement.setBoolean(3, upvoted);
-                        updateStatement.setBoolean(4, downvoted);
-                        updateStatement.setString(5, itemName);
-                        updateStatement.executeUpdate();
-                    }
-                }
+                // Item name exists, perform update
+                long id = resultSet.getLong("id");
+                updateStatement.setInt(1, upvotes);
+                updateStatement.setInt(2, downvotes);
+                updateStatement.setString(3, itemName);
+                updateStatement.executeUpdate();
+            } else {
+                // Item name does not exist, perform insert
+                insertStatement.setString(1, itemName);
+                insertStatement.setInt(2, upvotes);
+                insertStatement.setInt(3, downvotes);
+                insertStatement.executeUpdate();
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
 
 
 
