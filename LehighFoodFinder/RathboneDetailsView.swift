@@ -106,7 +106,6 @@ struct RathboneDetailsView: View {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    decoder.dateDecodingStrategy = .iso8601
                     let rathboneOptions = try decoder.decode([Rathbone].self, from: data)
                     DispatchQueue.main.async {
                         self.rathboneOptions = rathboneOptions
@@ -127,29 +126,25 @@ struct RathboneDetailsView: View {
         
         if updatedRathbone.upvoted {
             updatedRathbone.upvotes -= 1
+            updatedRathbone.upvoted = false
         } else {
             updatedRathbone.upvotes += 1
+            updatedRathbone.upvoted = true
             if updatedRathbone.downvoted {
                 updatedRathbone.downvotes -= 1
                 updatedRathbone.downvoted = false
             }
         }
         
-        updatedRathbone.upvoted = !updatedRathbone.upvoted
-        
         rathboneOptions[index] = updatedRathbone
         
-        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)?upvoted=\(updatedRathbone.upvoted)&downvoted=\(updatedRathbone.downvoted)") else {
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        request.httpBody = try? encoder.encode(updatedRathbone)
 
         URLSession.shared.dataTask(with: request) { _, _, error in
             if let error = error {
@@ -167,29 +162,25 @@ struct RathboneDetailsView: View {
         
         if updatedRathbone.downvoted {
             updatedRathbone.downvotes -= 1
+            updatedRathbone.downvoted = false
         } else {
             updatedRathbone.downvotes += 1
+            updatedRathbone.downvoted = true
             if updatedRathbone.upvoted {
                 updatedRathbone.upvotes -= 1
                 updatedRathbone.upvoted = false
             }
         }
         
-        updatedRathbone.downvoted = !updatedRathbone.downvoted
-        
         rathboneOptions[index] = updatedRathbone
         
-        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)?upvoted=\(updatedRathbone.upvoted)&downvoted=\(updatedRathbone.downvoted)") else {
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let encoder = JSONEncoder()
-        encoder.keyEncodingStrategy = .convertToSnakeCase
-        request.httpBody = try? encoder.encode(updatedRathbone)
 
         URLSession.shared.dataTask(with: request) { _, _, error in
             if let error = error {
