@@ -16,8 +16,23 @@ struct RathboneDetailsView: View {
                             Section(header: Text(courseName)) {
                                 ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
                                     VStack(alignment: .leading) {
-                                        Text(rathbone.menuItemName)
-                                            .font(.headline)
+                                        HStack {
+                                            Text(rathbone.menuItemName)
+                                                .font(.headline)
+                                            Spacer()
+                                            HStack(spacing: 16) {
+                                                Button(action: {
+                                                    upvoteRathbone(rathbone)
+                                                }) {
+                                                    Image(systemName: "hand.thumbsup")
+                                                }
+                                                Button(action: {
+                                                    downvoteRathbone(rathbone)
+                                                }) {
+                                                    Image(systemName: "hand.thumbsdown")
+                                                }
+                                            }
+                                        }
                                         Text("Calories: \(rathbone.calorieText ?? "N/A")")
                                             .font(.subheadline)
                                         Text("Allergens: \(rathbone.allergenNames)")
@@ -78,6 +93,16 @@ struct RathboneDetailsView: View {
 
     private func rathbones(for mealType: String, courseName: String) -> [Rathbone] {
         return rathbones(for: mealType).filter({ $0.courseName == courseName })
+    }
+    
+    private func upvoteRathbone(_ rathbone: Rathbone) {
+        // Perform the upvote logic here
+        print("Upvoting Rathbone:", rathbone.menuItemName)
+    }
+    
+    private func downvoteRathbone(_ rathbone: Rathbone) {
+        // Perform the downvote logic here
+        print("Downvoting Rathbone:", rathbone.menuItemName)
     }
     
     // Custom section header view for mealType
