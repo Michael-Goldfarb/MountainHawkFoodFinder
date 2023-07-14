@@ -91,4 +91,18 @@ public class RathboneService {
             e.printStackTrace();
         }
     }
+
+    public void insertFoodRating(String itemName, int upvotes, int downvotes) {
+        String sql = "INSERT INTO foodratings (item_name, upvotes, downvotes) VALUES (?, ?, ?)";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, itemName);
+            statement.setInt(2, upvotes);
+            statement.setInt(3, downvotes);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }
