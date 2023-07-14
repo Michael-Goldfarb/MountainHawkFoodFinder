@@ -1,4 +1,5 @@
 package com.pp.backend.service;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -47,68 +48,28 @@ public class RathboneService {
         return rathbones;
     }
 
-    public void createRathboneOption(Rathbone rathbone) {
-        String rathboneSql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names) VALUES (?, ?, ?, ?, ?)";
-        String foodRatingSql = "INSERT INTO foodRatings (item_name, upvotes, downvotes, upvoted, downvoted) VALUES (?, ?, ?, ?, ?)";
-
+    public void updateFoodRatings(long rathboneId, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement rathboneStatement = connection.prepareStatement(rathboneSql, PreparedStatement.RETURN_GENERATED_KEYS);
-             PreparedStatement foodRatingStatement = connection.prepareStatement(foodRatingSql)) {
-
-            connection.setAutoCommit(false);
-
-            rathboneStatement.setString(1, rathbone.getMealType());
-            rathboneStatement.setString(2, rathbone.getCourseName());
-            rathboneStatement.setString(3, rathbone.getMenuItemName());
-            rathboneStatement.setString(4, rathbone.getCalorieText());
-            rathboneStatement.setString(5, rathbone.getAllergenNames());
-
-            int rowsAffected = rathboneStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = rathboneStatement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        rathbone.setId(generatedKeys.getLong(1)); // Added to set the generated primary key
-                    }
-                }
-            }
-
-            foodRatingStatement.setString(1, rathbone.getMenuItemName());
-            foodRatingStatement.setInt(2, rathbone.getUpvotes());
-            foodRatingStatement.setInt(3, rathbone.getDownvotes());
-            foodRatingStatement.setBoolean(4, rathbone.isUpvoted());
-            foodRatingStatement.setBoolean(5, rathbone.isDownvoted());
-            foodRatingStatement.executeUpdate();
-
-            connection.commit();
-            connection.setAutoCommit(true);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateFoodRatings(long rathboneId, int upvotes, int downvotes) {
-        String sql = "UPDATE foodRatings SET upvotes = ?, downvotes = ? WHERE id = ?";
-
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement("UPDATE foodRatings SET upvotes = ?, downvotes = ?, upvoted = ?, downvoted = ? WHERE id = ?")) {
             statement.setInt(1, upvotes);
             statement.setInt(2, downvotes);
-            statement.setLong(3, rathboneId);
+            statement.setBoolean(3, upvoted);
+            statement.setBoolean(4, downvoted);
+            statement.setLong(5, rathboneId);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void insertFoodRating(String itemName, int upvotes, int downvotes) {
-        String sql = "INSERT INTO foodRatings (item_name, upvotes, downvotes) VALUES (?, ?, ?)";
-
+    public void insertFoodRating(String itemName, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement("INSERT INTO foodratings (item_name, upvotes, downvotes, upvoted, downvoted) VALUES (?, ?, ?, ?, ?)")) {
             statement.setString(1, itemName);
             statement.setInt(2, upvotes);
             statement.setInt(3, downvotes);
+            statement.setBoolean(4, upvoted);
+            statement.setBoolean(5, downvoted);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
