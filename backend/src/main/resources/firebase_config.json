@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "lehighfoodfinder-392523",
+  "private_key_id": "dc83f88d09a2f866ff5142a5f672acfcbd85fb2d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCw/2cn47PsX1cA\nDq7OV+m2+2BDLT66XgXmPGjkE0OtdxzrVItmU6680Q3a1ov2eNFDJDOkRODLnqTX\ns8HufxXxF7bTSjsY40vdHNcFGVDRO0gsLNP5kIxF4mq3x2Z6xO6Cc+N2AxMYMIGD\nLhbw0NaRH2phzLEeqtUyymg63WXhJNe+Vgo24XKNS4SgSRHLOKYZQqA7UHFXZne2\n6UCSmKw9D79GXA6boX8ndXxISjBbCrhG9Kjl4P2vrVaLAo2JpnIgG7vrjsHSNX8x\n/4FB1tre/XWvGvhkG82bqIyURbObxq71L8B5oBI4ms7SpBe8eOo1o0ur9+I02tUL\nPvzagoX5AgMBAAECggEASN9WstMqpFKaiMEC0pzackZr2yyZK3UDm8fabbDKx/QH\nGZLM8/vXMREnUabMqFUU3z5b7rGXFe6CsvZlDZMQTxty3+ori7MlbGtv0b8bCZIN\nRHbObW1Ie4tdYb38oOZMxrP8/f0FEwwBfqdutYZeGRDkpVB3ygcO0SMJp9a4l+l6\ndgUpswqxSfOkadVUr7k6VTkrWyHdjZYkmzZ6AL0WaweYWLFF0UKWgTbR/ucrGdli\ndM3vV2M8YwLgVnzWBxIOg60Tev3cB03JQqqU5KTQT+PHSa056D1VfrF4PUg+ztcU\nlM9R2NsJYqF5f5xDfySDhFXzap5jBGbwfsSnntosiwKBgQDbnntrehYCWbLph/Do\nuN3sgmHGF72aPriDBamohMrqR2PJ0RNtDO7oMvw9emVdtsTmoghOqPA0X6HhyOrs\n9HgH/bz/rl/sMqm8E2DNnBSmgOmi4klQH8YXtGKedcNTmwZx5u46wP0oN5XSSWXS\nV9XttZLNWbbVgTOl720IYnqCCwKBgQDOUXML1+IFPJOqABnlzcr3xFt1wv80yFAL\noU2867ph5qmDHrZzR/uCU3S49JU1E2C1blPk9VifA7RsOHj5l4J9CUFksPUQaDOc\nq+MzrlG5cGblPCbFIO3uwMcGNLSrB8I0A9geNtn38JG6wLg9AI+gE/LMrJtPFEj1\nZe+jWEX+iwKBgQCyAx6k+jtWwmAbnH2wFRCFARXBXELqAIbMZM2k86YKCb2fuyFU\n1hPcEF+WcVwyfs/Q5Wt4XsT8nrt3aMTLNkkIqSoF0NCdgl9EPCzN3AJ9B6bYyTSF\nhoupcSQyrt+ZJ+IsdvOImh9Y9t0wqx+mRF35pKCOZHanTmePy6cEEdadCwKBgCJ2\nYnQw/FUJmFTGLY1AQc3/I5PZHY3wg8ZdjEGpUnm18MyxHaLF/FH5pL6cRCwYb4f+\nxM6y2Lm/Aa0uBa8TSr2eBSlPka/K6AwcfhgM3yPNjbJuyL8W0AeYdeYoeaEz65GK\nrtflK6WJrp32QRAXfuYrTtw3XL3p0oIDI/Mx9IcfAoGBAMadhWP6czAGMJQqL0js\n9Prf/lHdXRNfIuPpg0zjoS+FqZKwTZpwR1FXDKp85spgLuvygREr8Xj7zyRIDRrF\ndwVHKnWdQKgxhU70PhQzfwQG662M2Zeo49Sz6EYNUTKeqVqoG43pkzb/Zo5AOQL8\nnKwaxiarLSF/vIp7x0QJmjaQ\n-----END PRIVATE KEY-----\n",
+  "client_email": "lehigh-food-finder@lehighfoodfinder-392523.iam.gserviceaccount.com",
+  "client_id": "104673490200697701007",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lehigh-food-finder%40lehighfoodfinder-392523.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
