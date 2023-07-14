@@ -9,8 +9,10 @@ class Rathbone: Codable, Identifiable {
     let allergenNames: String
     var upvotes: Int
     var downvotes: Int
+    var upvoted: Bool
+    var downvoted: Bool
     
-    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, upvotes: Int, downvotes: Int) {
+    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, upvotes: Int, downvotes: Int, upvoted: Bool, downvoted: Bool) {
         self.id = id
         self.mealType = mealType
         self.courseName = courseName
@@ -19,6 +21,8 @@ class Rathbone: Codable, Identifiable {
         self.allergenNames = allergenNames
         self.upvotes = upvotes
         self.downvotes = downvotes
+        self.upvoted = upvoted
+        self.downvoted = downvoted
     }
     
     enum CodingKeys: String, CodingKey {
@@ -30,6 +34,8 @@ class Rathbone: Codable, Identifiable {
         case allergenNames
         case upvotes
         case downvotes
+        case upvoted
+        case downvoted
     }
 }
 
@@ -57,13 +63,13 @@ struct RathboneDetailsView: View {
                                                 Button(action: {
                                                     upvoteRathbone(rathbone)
                                                 }) {
-                                                    Image(systemName: "hand.thumbsup")
+                                                    Image(systemName: rathbone.upvoted ? "hand.thumbsup.fill" : "hand.thumbsup")
                                                 }
                                                 Text("\(rathbone.upvotes)")
                                                 Button(action: {
                                                     downvoteRathbone(rathbone)
                                                 }) {
-                                                    Image(systemName: "hand.thumbsdown")
+                                                    Image(systemName: rathbone.downvoted ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                                                 }
                                                 Text("\(rathbone.downvotes)")
                                             }
@@ -100,6 +106,7 @@ struct RathboneDetailsView: View {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    decoder.dateDecodingStrategy = .iso8601
                     let rathboneOptions = try decoder.decode([Rathbone].self, from: data)
                     DispatchQueue.main.async {
                         self.rathboneOptions = rathboneOptions
@@ -111,40 +118,82 @@ struct RathboneDetailsView: View {
         }.resume()
     }
     
-    private func upvote(rathbone: Rathbone) {
-        rathbone.upvotes += 1 // Update the upvotes count locally
-        saveFoodRating(rathbone: rathbone)
-    }
-
-    private func downvote(rathbone: Rathbone) {
-        rathbone.downvotes += 1 // Update the downvotes count locally
-        saveFoodRating(rathbone: rathbone)
-    }
-
-    private func saveFoodRating(rathbone: Rathbone) {
-        guard let url = URL(string: "http://localhost:8000/rathbone") else {
+    private func upvoteRathbone(_ rathbone: Rathbone) {
+        guard let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) else {
+            return
+        }
+        
+        var updatedRathbone = rathboneOptions[index]
+        
+        if updatedRathbone.upvoted {
+            updatedRathbone.upvotes -= 1
+        } else {
+            updatedRathbone.upvotes += 1
+            if updatedRathbone.downvoted {
+                updatedRathbone.downvotes -= 1
+                updatedRathbone.downvoted = false
+            }
+        }
+        
+        updatedRathbone.upvoted = !updatedRathbone.upvoted
+        
+        rathboneOptions[index] = updatedRathbone
+        
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
             return
         }
 
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        request.httpBody = try? encoder.encode(updatedRathbone)
 
-        let ratingData: [String: Any] = [
-            "menuItemName": rathbone.menuItemName,
-            "upvotes": rathbone.upvotes,
-            "downvotes": rathbone.downvotes
-        ]
+        URLSession.shared.dataTask(with: request) { _, _, error in
+            if let error = error {
+                print("Error updating rathbone:", error)
+            }
+        }.resume()
+    }
 
-        do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: ratingData)
-        } catch {
-            print("Error encoding rating data:", error)
+    private func downvoteRathbone(_ rathbone: Rathbone) {
+        guard let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) else {
+            return
+        }
+        
+        var updatedRathbone = rathboneOptions[index]
+        
+        if updatedRathbone.downvoted {
+            updatedRathbone.downvotes -= 1
+        } else {
+            updatedRathbone.downvotes += 1
+            if updatedRathbone.upvoted {
+                updatedRathbone.upvotes -= 1
+                updatedRathbone.upvoted = false
+            }
+        }
+        
+        updatedRathbone.downvoted = !updatedRathbone.downvoted
+        
+        rathboneOptions[index] = updatedRathbone
+        
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
             return
         }
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let encoder = JSONEncoder()
+        encoder.keyEncodingStrategy = .convertToSnakeCase
+        request.httpBody = try? encoder.encode(updatedRathbone)
+
+        URLSession.shared.dataTask(with: request) { _, _, error in
             if let error = error {
-                print("Error saving food rating:", error)
+                print("Error updating rathbone:", error)
             }
         }.resume()
     }
@@ -167,88 +216,6 @@ struct RathboneDetailsView: View {
     private func rathbones(for mealType: String, courseName: String) -> [Rathbone] {
         return rathbones(for: mealType).filter({ $0.courseName == courseName })
     }
-    
-    private func upvoteRathbone(_ rathbone: Rathbone) {
-        guard let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) else {
-            return
-        }
-        
-        var updatedRathbone = rathboneOptions[index]
-        updatedRathbone.upvotes += 1
-        rathboneOptions[index] = updatedRathbone
-        
-        // Insert the row into the foodratings table
-        insertFoodRating(rathbone.menuItemName, upvotes: updatedRathbone.upvotes, downvotes: updatedRathbone.downvotes)
-
-        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONEncoder().encode(updatedRathbone)
-
-        URLSession.shared.dataTask(with: request) { _, _, error in
-            if let error = error {
-                print("Error updating rathbone:", error)
-            }
-        }.resume()
-    }
-
-    private func downvoteRathbone(_ rathbone: Rathbone) {
-        guard let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) else {
-            return
-        }
-        
-        var updatedRathbone = rathboneOptions[index]
-        updatedRathbone.downvotes += 1
-        rathboneOptions[index] = updatedRathbone
-        
-        // Insert the row into the foodratings table
-        insertFoodRating(rathbone.menuItemName, upvotes: updatedRathbone.upvotes, downvotes: updatedRathbone.downvotes)
-
-        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONEncoder().encode(updatedRathbone)
-
-        URLSession.shared.dataTask(with: request) { _, _, error in
-            if let error = error {
-                print("Error updating rathbone:", error)
-            }
-        }.resume()
-    }
-
-    private func insertFoodRating(_ itemName: String, upvotes: Int, downvotes: Int) {
-        guard let url = URL(string: "http://localhost:8000/foodratings") else {
-            return
-        }
-        
-        let foodRating = FoodRating(itemName: itemName, upvotes: upvotes, downvotes: downvotes)
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try? JSONEncoder().encode(foodRating)
-
-        URLSession.shared.dataTask(with: request) { _, _, error in
-            if let error = error {
-                print("Error inserting food rating:", error)
-            }
-        }.resume()
-    }
-
-    struct FoodRating: Codable {
-        let itemName: String
-        let upvotes: Int
-        let downvotes: Int
-    }
-
     
     // Custom section header view for mealType
     private func headerView(for mealType: String) -> some View {
