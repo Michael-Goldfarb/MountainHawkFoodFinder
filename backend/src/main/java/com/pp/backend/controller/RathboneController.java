@@ -22,8 +22,8 @@ public class RathboneController {
     }
     
     @PostMapping
-    public ResponseEntity<Rathbone> createRathboneOption(@RequestBody Rathbone rathbone) {
-        Rathbone createdRathbone = rathboneService.createRathboneOption(rathbone);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdRathbone);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createRathboneOption(@RequestBody Rathbone rathbone) {
+        rathboneService.createRathboneOption(rathbone);
     }
 }

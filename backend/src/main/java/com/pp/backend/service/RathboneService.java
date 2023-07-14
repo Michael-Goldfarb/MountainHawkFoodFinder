@@ -1,5 +1,4 @@
 package com.pp.backend.service;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +20,7 @@ public class RathboneService {
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, fr.upvotes, fr.downvotes " +
+                    "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, fr.upvotes, fr.downvotes, fr.upvoted, fr.downvoted " +
                             "FROM rathboneOptions r " +
                             "LEFT JOIN foodRatings fr ON r.menu_item_name = fr.item_name")) {
                 ResultSet resultSet = statement.executeQuery();
@@ -36,6 +35,8 @@ public class RathboneService {
                     rathbone.setAllergenNames(resultSet.getString("allergen_names"));
                     rathbone.setUpvotes(resultSet.getInt("upvotes"));
                     rathbone.setDownvotes(resultSet.getInt("downvotes"));
+                    rathbone.setUpvoted(resultSet.getBoolean("upvoted"));
+                    rathbone.setDownvoted(resultSet.getBoolean("downvoted"));
                     rathbones.add(rathbone);
                 }
             }
@@ -46,36 +47,44 @@ public class RathboneService {
         return rathbones;
     }
 
-
-
-
-    public Rathbone createRathboneOption(Rathbone rathbone) {
-        String sql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names) VALUES (?, ?, ?, ?, ?)";
+    public void createRathboneOption(Rathbone rathbone) {
+        String rathboneSql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names) VALUES (?, ?, ?, ?, ?)";
+        String foodRatingSql = "INSERT INTO foodRatings (item_name, upvotes, downvotes, upvoted, downvoted) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement rathboneStatement = connection.prepareStatement(rathboneSql, PreparedStatement.RETURN_GENERATED_KEYS);
+             PreparedStatement foodRatingStatement = connection.prepareStatement(foodRatingSql)) {
 
-            statement.setString(1, rathbone.getMealType());
-            statement.setString(2, rathbone.getCourseName());
-            statement.setString(3, rathbone.getMenuItemName());
-            statement.setString(4, rathbone.getCalorieText());
-            statement.setString(5, rathbone.getAllergenNames());
+            connection.setAutoCommit(false);
 
-            int rowsAffected = statement.executeUpdate();
+            rathboneStatement.setString(1, rathbone.getMealType());
+            rathboneStatement.setString(2, rathbone.getCourseName());
+            rathboneStatement.setString(3, rathbone.getMenuItemName());
+            rathboneStatement.setString(4, rathbone.getCalorieText());
+            rathboneStatement.setString(5, rathbone.getAllergenNames());
+
+            int rowsAffected = rathboneStatement.executeUpdate();
             if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                try (ResultSet generatedKeys = rathboneStatement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         rathbone.setId(generatedKeys.getLong(1)); // Added to set the generated primary key
-                        return rathbone;
                     }
                 }
             }
 
-            throw new SQLException("Unable to create Rathbone option");
+            foodRatingStatement.setString(1, rathbone.getMenuItemName());
+            foodRatingStatement.setInt(2, rathbone.getUpvotes());
+            foodRatingStatement.setInt(3, rathbone.getDownvotes());
+            foodRatingStatement.setBoolean(4, rathbone.isUpvoted());
+            foodRatingStatement.setBoolean(5, rathbone.isDownvoted());
+            foodRatingStatement.executeUpdate();
+
+            connection.commit();
+            connection.setAutoCommit(true);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     public void updateFoodRatings(long rathboneId, int upvotes, int downvotes) {
@@ -93,7 +102,7 @@ public class RathboneService {
     }
 
     public void insertFoodRating(String itemName, int upvotes, int downvotes) {
-        String sql = "INSERT INTO foodratings (item_name, upvotes, downvotes) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO foodRatings (item_name, upvotes, downvotes) VALUES (?, ?, ?)";
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {

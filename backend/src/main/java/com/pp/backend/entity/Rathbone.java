@@ -17,12 +17,14 @@ public class Rathbone {
     private String allergenNames;
     private int upvotes;
     private int downvotes;
+    private boolean upvoted;
+    private boolean downvoted;
 
     public Rathbone() {
     }
 
     public Rathbone(String mealType, String courseName, String menuItemName, String calorieText, String allergenNames,
-            int upvotes, int downvotes) {
+            int upvotes, int downvotes, Boolean upvoted, Boolean downvoted) {
         this.mealType = mealType;
         this.courseName = courseName;
         this.menuItemName = menuItemName;
@@ -30,6 +32,8 @@ public class Rathbone {
         this.allergenNames = allergenNames;
         this.upvotes = upvotes;
         this.downvotes = downvotes;
+        this.upvoted = upvoted;
+        this.downvoted = downvoted;
     }
 
     // Getters and setters
@@ -97,4 +101,29 @@ public class Rathbone {
     public void setDownvotes(int downvotes) {
         this.downvotes = downvotes;
     }
+
+    public Boolean getUpvoted() {
+        return upvoted;
+    }
+
+    public void setUpvoted(Boolean upvoted) {
+        this.upvoted = upvoted;
+    }
+
+    public Boolean getDownvoted() {
+        return downvoted;
+    }
+
+    public void setDownvoted(Boolean downvoted) {
+        this.downvoted = downvoted;
+    }
+
+    public boolean isUpvoted() {
+        return upvoted;
+    }
+
+    public boolean isDownvoted() {
+        return downvoted;
+    }
+
 }
