@@ -26,11 +26,13 @@ struct RathboneDetailsView: View {
                                                 }) {
                                                     Image(systemName: "hand.thumbsup")
                                                 }
+                                                Text("\(rathbone.upvotes)")
                                                 Button(action: {
                                                     downvoteRathbone(rathbone)
                                                 }) {
                                                     Image(systemName: "hand.thumbsdown")
                                                 }
+                                                Text("\(rathbone.downvotes)")
                                             }
                                         }
                                         Text("Calories: \(rathbone.calorieText ?? "N/A")")
@@ -96,13 +98,17 @@ struct RathboneDetailsView: View {
     }
     
     private func upvoteRathbone(_ rathbone: Rathbone) {
-        // Perform the upvote logic here
-        print("Upvoting Rathbone:", rathbone.menuItemName)
+        // Increment the upvotes count
+        if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
+            rathboneOptions[index].upvotes += 1
+        }
     }
     
     private func downvoteRathbone(_ rathbone: Rathbone) {
-        // Perform the downvote logic here
-        print("Downvoting Rathbone:", rathbone.menuItemName)
+        // Increment the downvotes count
+        if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
+            rathboneOptions[index].downvotes += 1
+        }
     }
     
     // Custom section header view for mealType
@@ -120,6 +126,19 @@ struct Rathbone: Codable, Identifiable {
     let menuItemName: String
     let calorieText: String?
     let allergenNames: String
+    var upvotes: Int
+    var downvotes: Int
+    
+    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, upvotes: Int, downvotes: Int) {
+        self.id = id
+        self.mealType = mealType
+        self.courseName = courseName
+        self.menuItemName = menuItemName
+        self.calorieText = calorieText
+        self.allergenNames = allergenNames
+        self.upvotes = upvotes
+        self.downvotes = downvotes
+    }
 }
 
 struct RathboneDetailsView_Previews: PreviewProvider {
