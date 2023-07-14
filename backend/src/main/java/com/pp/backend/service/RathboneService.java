@@ -20,9 +20,10 @@ public class RathboneService {
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, fr.upvotes, fr.downvotes " +
-                            "FROM rathboneOptions r " +
-                            "LEFT JOIN foodRatings fr ON r.menu_item_name = fr.item_name")) {
+                    "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, " +
+                    "f.givenStars, f.totalGivenStars, f.totalMaxStars, f.averageStars " +
+                    "FROM rathboneOptions r " +
+                    "LEFT JOIN foodRatings f ON r.menu_item_name = f.item_name")) {
                 ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
@@ -33,8 +34,10 @@ public class RathboneService {
                     rathbone.setMenuItemName(resultSet.getString("menu_item_name"));
                     rathbone.setCalorieText(resultSet.getString("calorie_text"));
                     rathbone.setAllergenNames(resultSet.getString("allergen_names"));
-                    rathbone.setUpvotes(resultSet.getInt("upvotes"));
-                    rathbone.setDownvotes(resultSet.getInt("downvotes"));
+                    rathbone.setGivenStars(resultSet.getInt("givenStars"));
+                    rathbone.setTotalGivenStars(resultSet.getInt("totalGivenStars"));
+                    rathbone.setTotalMaxStars(resultSet.getInt("totalMaxStars"));
+                    rathbone.setAverageStars(resultSet.getDouble("averageStars"));
                     rathbones.add(rathbone);
                 }
             }
@@ -45,43 +48,48 @@ public class RathboneService {
         return rathbones;
     }
 
+
+
     public Rathbone createRathboneOption(Rathbone rathbone) {
-        String sql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO rathboneOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names, givenStars, totalGivenStars, totalMaxStars, averageStars) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                "RETURNING id";
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, rathbone.getMealType());
             statement.setString(2, rathbone.getCourseName());
             statement.setString(3, rathbone.getMenuItemName());
             statement.setString(4, rathbone.getCalorieText());
             statement.setString(5, rathbone.getAllergenNames());
+            statement.setInt(6, rathbone.getGivenStars());
+            statement.setInt(7, rathbone.getTotalGivenStars());
+            statement.setInt(8, rathbone.getTotalMaxStars());
+            statement.setDouble(9, rathbone.getAverageStars());
 
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                    if (generatedKeys.next()) {
-                        rathbone.setId(generatedKeys.getLong(1)); // Added to set the generated primary key
-                        return rathbone;
-                    }
-                }
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                rathbone.setId(resultSet.getLong("id"));
+                return rathbone;
             }
 
-            throw new SQLException("Unable to create Rathbone option");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+
     public Rathbone getRathboneById(long rathboneId) {
-        String sql = "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, fr.upvotes, fr.downvotes " +
+        String sql = "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, f.givenStars, f.totalGivenStars, f.totalMaxStars, f.averageStars " +
                 "FROM rathboneOptions r " +
-                "LEFT JOIN foodRatings fr ON r.menu_item_name = fr.item_name " +
+                "JOIN foodRatings f ON r.menu_item_name = f.item_name " +
                 "WHERE r.id = ?";
 
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+            PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setLong(1, rathboneId);
 
@@ -95,8 +103,10 @@ public class RathboneService {
                 rathbone.setMenuItemName(resultSet.getString("menu_item_name"));
                 rathbone.setCalorieText(resultSet.getString("calorie_text"));
                 rathbone.setAllergenNames(resultSet.getString("allergen_names"));
-                rathbone.setUpvotes(resultSet.getInt("upvotes"));
-                rathbone.setDownvotes(resultSet.getInt("downvotes"));
+                rathbone.setGivenStars(resultSet.getInt("givenStars"));
+                rathbone.setTotalGivenStars(resultSet.getInt("totalGivenStars"));
+                rathbone.setTotalMaxStars(resultSet.getInt("totalMaxStars"));
+                rathbone.setAverageStars(resultSet.getDouble("averageStars"));
                 return rathbone;
             }
 
@@ -107,53 +117,40 @@ public class RathboneService {
         return null;
     }
 
-    public void updateFoodRatings(String itemName, int upvotes, int downvotes) {
-        String selectSql = "SELECT id FROM foodRatings WHERE item_name = ?";
-        String insertSql = "INSERT INTO foodRatings (item_name, upvotes, downvotes) VALUES (?, ?, ?)";
-        String updateSql = "UPDATE foodRatings SET upvotes = ?, downvotes = ? WHERE item_name = ?";
+
+    public void updateFoodRatings(String itemName, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
+        String selectSql = "SELECT totalGivenStars, totalMaxStars FROM foodRatings WHERE item_name = ?";
+        String updateSql = "UPDATE foodRatings SET givenStars = ?, totalGivenStars = ?, totalMaxStars = ?, averageStars = ? WHERE item_name = ?";
+        String insertSql = "INSERT INTO foodRatings (item_name, givenStars, totalGivenStars, totalMaxStars, averageStars) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection connection = dataSource.getConnection();
             PreparedStatement selectStatement = connection.prepareStatement(selectSql);
-            PreparedStatement insertStatement = connection.prepareStatement(insertSql);
-            PreparedStatement updateStatement = connection.prepareStatement(updateSql)) {
+            PreparedStatement updateStatement = connection.prepareStatement(updateSql);
+            PreparedStatement insertStatement = connection.prepareStatement(insertSql)) {
 
             selectStatement.setString(1, itemName);
             ResultSet resultSet = selectStatement.executeQuery();
 
             if (resultSet.next()) {
-                // Item name exists, perform update
-                System.out.println("updating");
-                long id = resultSet.getLong("id");
-                updateStatement.setInt(1, upvotes);
-                updateStatement.setInt(2, downvotes);
-                updateStatement.setString(3, itemName);
+                totalGivenStars += givenStars;
+                totalMaxStars += 5;
+                averageStars = (double) totalGivenStars / totalMaxStars;
+
+                updateStatement.setInt(1, givenStars);
+                updateStatement.setInt(2, totalGivenStars);
+                updateStatement.setInt(3, totalMaxStars);
+                updateStatement.setDouble(4, averageStars);
+                updateStatement.setString(5, itemName);
                 updateStatement.executeUpdate();
             } else {
-                // Item name does not exist, perform insert
-                System.out.println("inserting");
+                // The menu item doesn't exist, insert a new row
                 insertStatement.setString(1, itemName);
-                insertStatement.setInt(2, upvotes);
-                insertStatement.setInt(3, downvotes);
+                insertStatement.setInt(2, givenStars);
+                insertStatement.setInt(3, totalGivenStars);
+                insertStatement.setInt(4, totalMaxStars);
+                insertStatement.setDouble(5, averageStars);
                 insertStatement.executeUpdate();
             }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-
-    public void insertFoodRating(String itemName, int upvotes, int downvotes, boolean upvoted, boolean downvoted) {
-        try (Connection connection = dataSource.getConnection();
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO foodratings (item_name, upvotes, downvotes, upvoted, downvoted) VALUES (?, ?, ?, ?, ?)")) {
-            statement.setString(1, itemName);
-            statement.setInt(2, upvotes);
-            statement.setInt(3, downvotes);
-            statement.setBoolean(4, upvoted);
-            statement.setBoolean(5, downvoted);
-            statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }

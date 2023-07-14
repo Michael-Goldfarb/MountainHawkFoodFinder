@@ -15,34 +15,28 @@ struct RathboneDetailsView: View {
                         ForEach(courseNames(for: mealType), id: \.self) { courseName in
                             Section(header: Text(courseName)) {
                                 ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
-                                    VStack(alignment: .leading) {
-                                        HStack {
-                                            Text(rathbone.menuItemName)
-                                                .font(.headline)
-                                            Spacer()
-                                            HStack(spacing: 16) {
-                                                Button(action: {
-                                                    upvoteRathbone(rathbone)
-                                                }) {
-                                                    Image(systemName: "hand.thumbsup")
-                                                }
-                                                .buttonStyle(BorderlessButtonStyle()) // Add button style
-                                                Text("\(rathbone.upvotes)")
-                                                Button(action: {
-                                                    downvoteRathbone(rathbone)
-                                                }) {
-                                                    Image(systemName: "hand.thumbsdown")
-                                                }
-                                                .buttonStyle(BorderlessButtonStyle()) // Add button style
-                                                Text("\(rathbone.downvotes)")
+                                    VStack(alignment: .leading, spacing: 4) { // Set spacing to 4
+                                        HStack(spacing: 4) { // Set spacing to 4
+                                            // Display the given stars as stars
+                                            ForEach(1...5, id: \.self) { star in
+                                                Image(systemName: "star.fill")
+                                                    .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
+                                                    .font(.system(size: 12)) // Adjust the star size
+                                                    .onTapGesture {
+                                                        rateRathbone(rathbone, givenStars: star)
+                                                    }
                                             }
                                         }
+                                        Text("Menu Item: \(rathbone.menuItemName)")
+                                            .font(.headline) // Increase the font size
+                                            .padding(.top, 4)
                                         Text("Calories: \(rathbone.calorieText ?? "N/A")")
                                             .font(.subheadline)
                                         Text("Allergens: \(rathbone.allergenNames)")
                                             .font(.subheadline)
                                     }
                                     .padding()
+
                                 }
                             }
                         }
@@ -98,75 +92,51 @@ struct RathboneDetailsView: View {
     private func rathbones(for mealType: String, courseName: String) -> [Rathbone] {
         return rathbones(for: mealType).filter({ $0.courseName == courseName })
     }
-    
-    private func upvoteRathbone(_ rathbone: Rathbone) {
-        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)?upvoted=true&downvoted=false") else {
+
+    private func rateRathbone(_ rathbone: Rathbone, givenStars: Int) {
+        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
             return
         }
 
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type") // Set Content-Type header
+
+        let body: [String: Any] = [
+            "givenStars": givenStars
+        ]
+
+        do {
+            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        } catch {
+            print("Error creating JSON data:", error)
+            return
+        }
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Error upvoting Rathbone:", error)
+                print("Error rating Rathbone:", error)
             } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
                 DispatchQueue.main.async {
                     if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
-                        // Check if the rathbone has already been upvoted or downvoted
-                        if !rathboneOptions[index].upvoted && !rathboneOptions[index].downvoted {
-                            rathboneOptions[index].upvotes += 1
-                            rathboneOptions[index].upvoted = true
-                            rathboneOptions[index].downvotes = 0  // Reset downvotes to 0
-                            rathboneOptions[index].downvoted = false
-                        }
+                        rathboneOptions[index].givenStars = givenStars
                     }
                 }
-                print("Rathbone upvoted successfully")
+                print("Rathbone rated successfully")
             } else {
-                print("Failed to upvote Rathbone")
+                print("Failed to rate Rathbone")
             }
         }.resume()
+    }
+
+    private func upvoteRathbone(_ rathbone: Rathbone) {
+        rateRathbone(rathbone, givenStars: 5)
     }
 
     private func downvoteRathbone(_ rathbone: Rathbone) {
-        guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)?upvoted=false&downvoted=true") else {
-            return
-        }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error downvoting Rathbone:", error)
-            } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
-                DispatchQueue.main.async {
-                    if let index = rathboneOptions.firstIndex(where: { $0.id == rathbone.id }) {
-                        // Check if the rathbone has already been upvoted or downvoted
-                        if !rathboneOptions[index].downvoted && !rathboneOptions[index].upvoted {
-                            rathboneOptions[index].downvotes += 1
-                            rathboneOptions[index].downvoted = true
-                            rathboneOptions[index].upvotes = 0  // Reset upvotes to 0
-                            rathboneOptions[index].upvoted = false
-                        }
-                    }
-                }
-                print("Rathbone downvoted successfully")
-            } else {
-                print("Failed to downvote Rathbone")
-            }
-        }.resume()
+        rateRathbone(rathbone, givenStars: 1)
     }
 
-
-
-
-
-
-
-
-
-
-    
     // Custom section header view for mealType
     private func headerView(for mealType: String) -> some View {
         Text(mealType)
@@ -182,23 +152,23 @@ struct Rathbone: Codable, Identifiable {
     let menuItemName: String
     let calorieText: String?
     let allergenNames: String
-    var upvotes: Int
-    var downvotes: Int
-    var upvoted: Bool  // New property
-    var downvoted: Bool  // New property
-        
-    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, upvotes: Int, downvotes: Int, upvoted: Bool, downvoted: Bool) {
-            self.id = id
-            self.mealType = mealType
-            self.courseName = courseName
-            self.menuItemName = menuItemName
-            self.calorieText = calorieText
-            self.allergenNames = allergenNames
-            self.upvotes = upvotes
-            self.downvotes = downvotes
-            self.upvoted = upvoted
-            self.downvoted = downvoted
-        }
+    var givenStars: Int
+    let totalGivenStars: Int
+    let totalMaxStars: Int
+    let averageStars: Double
+
+    init(id: Int, mealType: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, givenStars: Int, totalGivenStars: Int, totalMaxStars: Int, averageStars: Double) {
+        self.id = id
+        self.mealType = mealType
+        self.courseName = courseName
+        self.menuItemName = menuItemName
+        self.calorieText = calorieText
+        self.allergenNames = allergenNames
+        self.givenStars = givenStars
+        self.totalGivenStars = totalGivenStars
+        self.totalMaxStars = totalMaxStars
+        self.averageStars = averageStars
+    }
 }
 
 struct RathboneDetailsView_Previews: PreviewProvider {

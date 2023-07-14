@@ -10,8 +10,23 @@ public class RathboneRatingRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean upvoted;
-    private boolean downvoted;
+    private int givenStars;
+    private int totalGivenStars;
+    private int totalMaxStars;
+    private double averageStars;
+
+    public RathboneRatingRequest() {
+    }
+
+    public RathboneRatingRequest(Long id, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
+        this.id = id;
+        this.givenStars = givenStars;
+        this.totalGivenStars = totalGivenStars;
+        this.totalMaxStars = totalMaxStars;
+        this.averageStars = averageStars;
+    }
+
+    // Getters and setters
 
     public Long getId() {
         return id;
@@ -21,19 +36,35 @@ public class RathboneRatingRequest {
         this.id = id;
     }
 
-    public boolean isUpvoted() {
-        return upvoted;
+    public int getGivenStars() {
+        return givenStars;
     }
 
-    public void setUpvoted(boolean upvoted) {
-        this.upvoted = upvoted;
+    public void setGivenStars(int givenStars) {
+        this.givenStars = givenStars;
     }
 
-    public boolean isDownvoted() {
-        return downvoted;
+    public int getTotalGivenStars() {
+        return totalGivenStars;
     }
 
-    public void setDownvoted(boolean downvoted) {
-        this.downvoted = downvoted;
+    public void setTotalGivenStars(int totalGivenStars) {
+        this.totalGivenStars = totalGivenStars;
+    }
+
+    public int getTotalMaxStars() {
+        return totalMaxStars;
+    }
+
+    public void setTotalMaxStars(int totalMaxStars) {
+        this.totalMaxStars = totalMaxStars;
+    }
+
+    public double getAverageStars() {
+        return averageStars;
+    }
+
+    public void setAverageStars(double averageStars) {
+        this.averageStars = averageStars;
     }
 }

@@ -11,66 +11,42 @@ import com.pp.backend.service.RathboneService;
 @RequestMapping("/rathbone")
 public class RathboneController {
     private final RathboneService rathboneService;
-    
+
     public RathboneController(RathboneService rathboneService) {
         this.rathboneService = rathboneService;
     }
-    
+
     @GetMapping
     public ResponseEntity<List<Rathbone>> getRathboneOptions() {
         List<Rathbone> rathbones = rathboneService.getRathboneOptions();
         return ResponseEntity.ok(rathbones);
     }
-    
+
     @PostMapping
     public ResponseEntity<Rathbone> createRathboneOption(@RequestBody Rathbone rathbone) {
         Rathbone createdRathbone = rathboneService.createRathboneOption(rathbone);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdRathbone);
     }
-    
-    @PutMapping("/{rathboneId}")
-    public ResponseEntity<Rathbone> updateFoodRatings(@PathVariable String rathboneId,
-                                                    @RequestParam boolean upvoted,
-                                                    @RequestParam boolean downvoted) {
-        long rathboneIdLong;
-        try {
-            rathboneIdLong = Long.parseLong(rathboneId);
-        } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().build();
-        }
 
-        Rathbone rathbone = rathboneService.getRathboneById(rathboneIdLong);
+    @PutMapping("/{rathboneId}")
+    public ResponseEntity<Rathbone> updateFoodRatings(@PathVariable Long rathboneId, @RequestBody RathboneRatingRequest ratingRequest) {
+        Rathbone rathbone = rathboneService.getRathboneById(rathboneId);
         if (rathbone == null) {
             return ResponseEntity.notFound().build();
         }
 
-        int upvotes = rathbone.getUpvotes();
-        int downvotes = rathbone.getDownvotes();
+        int givenStars = ratingRequest.getGivenStars();
+        int totalGivenStars = ratingRequest.getTotalGivenStars();
+        int totalMaxStars = ratingRequest.getTotalMaxStars();
+        double averageStars = ratingRequest.getAverageStars();
 
-        if (upvoted && !rathbone.isUpvoted()) {
-            upvotes++;
-            if (rathbone.isDownvoted()) {
-                downvotes--;
-            }
-        } else if (!upvoted && rathbone.isUpvoted()) {
-            upvotes--;
-        }
+        rathboneService.updateFoodRatings(rathbone.getMenuItemName(), givenStars, totalGivenStars, totalMaxStars, averageStars);
 
-        if (downvoted && !rathbone.isDownvoted()) {
-            downvotes++;
-            if (rathbone.isUpvoted()) {
-                upvotes--;
-            }
-        } else if (!downvoted && rathbone.isDownvoted()) {
-            downvotes--;
-        }
+        rathbone.setGivenStars(givenStars);
+        rathbone.setTotalGivenStars(totalGivenStars);
+        rathbone.setTotalMaxStars(totalMaxStars);
+        rathbone.setAverageStars(averageStars);
 
-        rathboneService.updateFoodRatings(rathbone.getMenuItemName(), upvotes, downvotes);
-
-        Rathbone updatedRathbone = new Rathbone(rathbone.getId(), rathbone.getMealType(), rathbone.getCourseName(),
-                rathbone.getMenuItemName(), rathbone.getCalorieText(), rathbone.getAllergenNames(), upvotes, downvotes,
-                rathbone.isUpvoted(), rathbone.isDownvoted());
-
-        return ResponseEntity.ok(updatedRathbone);
+        return ResponseEntity.ok(rathbone);
     }
 }

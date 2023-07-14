@@ -15,26 +15,26 @@ public class Rathbone {
     private String menuItemName;
     private String calorieText;
     private String allergenNames;
-    private int upvotes;
-    private int downvotes;
-    private boolean upvoted;
-    private boolean downvoted;
+    private int givenStars;
+    private int totalGivenStars;
+    private int totalMaxStars;
+    private double averageStars;
 
     public Rathbone() {
     }
 
     public Rathbone(Long id, String mealType, String courseName, String menuItemName, String calorieText,
-                    String allergenNames, int upvotes, int downvotes, Boolean upvoted, Boolean downvoted) {
+                    String allergenNames, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
         this.id = id;
         this.mealType = mealType;
         this.courseName = courseName;
         this.menuItemName = menuItemName;
         this.calorieText = calorieText;
         this.allergenNames = allergenNames;
-        this.upvotes = upvotes;
-        this.downvotes = downvotes;
-        this.upvoted = upvoted;
-        this.downvoted = downvoted;
+        this.givenStars = givenStars;
+        this.totalGivenStars = totalGivenStars;
+        this.totalMaxStars = totalMaxStars;
+        this.averageStars = averageStars;
     }
 
     // Getters and setters
@@ -87,44 +87,35 @@ public class Rathbone {
         this.allergenNames = allergenNames;
     }
 
-    public int getUpvotes() {
-        return upvotes;
+    public int getGivenStars() {
+        return givenStars;
     }
 
-    public void setUpvotes(int upvotes) {
-        this.upvotes = upvotes;
+    public void setGivenStars(int givenStars) {
+        this.givenStars = givenStars;
     }
 
-    public int getDownvotes() {
-        return downvotes;
+    public int getTotalGivenStars() {
+        return totalGivenStars;
     }
 
-    public void setDownvotes(int downvotes) {
-        this.downvotes = downvotes;
+    public void setTotalGivenStars(int totalGivenStars) {
+        this.totalGivenStars = totalGivenStars;
     }
 
-    public Boolean getUpvoted() {
-        return upvoted;
+    public int getTotalMaxStars() {
+        return totalMaxStars;
     }
 
-    public void setUpvoted(Boolean upvoted) {
-        this.upvoted = upvoted;
+    public void setTotalMaxStars(int totalMaxStars) {
+        this.totalMaxStars = totalMaxStars;
     }
 
-    public Boolean getDownvoted() {
-        return downvoted;
+    public double getAverageStars() {
+        return averageStars;
     }
 
-    public void setDownvoted(Boolean downvoted) {
-        this.downvoted = downvoted;
+    public void setAverageStars(double averageStars) {
+        this.averageStars = averageStars;
     }
-
-    public boolean isUpvoted() {
-        return upvoted;
-    }
-
-    public boolean isDownvoted() {
-        return downvoted;
-    }
-
 }
