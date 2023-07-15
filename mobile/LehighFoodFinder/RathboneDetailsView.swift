@@ -4,20 +4,24 @@ struct RathboneDetailsView: View {
     @State private var rathboneOptions: [Rathbone] = []
         @State private var isHomeViewPresented = false
 
-        var body: some View {
-            NavigationView {
-                VStack {
-                    Button(action: {
-                        isHomeViewPresented = true
-                    }) {
-                        Text("Back To Map")
-                            .font(.headline)
-                            .padding()
-                    }
-                    .fullScreenCover(isPresented: $isHomeViewPresented) {
-                        HomeView()
-                            .environmentObject(NavigationState()) // Provide the NavigationState environment object
-                    }
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 10) {
+                Button(action: {
+                    isHomeViewPresented = true
+                }) {
+                    Image("AppleMaps")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 40, height: 40)
+                }
+                .fullScreenCover(isPresented: $isHomeViewPresented) {
+                    HomeView()
+                        .environmentObject(NavigationState()) // Provide the NavigationState environment object
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding(.trailing, 16)
+                    Spacer() // Add a Spacer to push the List to the bottom
 
                     List {
                         ForEach(mealTypes, id: \.self) { mealType in
@@ -73,11 +77,24 @@ struct RathboneDetailsView: View {
                         }
                     }
                 }
-                .background(Color.white)
-                .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
-                .onAppear {
-                    fetchRathboneOptions()
-                }
+            .background(Color.white)
+                        .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
+                        .padding(.top, -25)
+                        .onAppear {
+                            fetchRathboneOptions()
+                        }
+                        .toolbar {
+                            ToolbarItem(placement: .principal) {
+                                VStack {
+                                    Text("Rathbone Dining Hall")
+                                        .font(.system(size: 24, weight: .bold))
+                                        .padding(.top, 10) // Add padding to move the title down
+                                    Text("Click on the Map to Go Back to the Map")
+                                        .font(.subheadline)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                        }
             }
         }
     
@@ -174,7 +191,6 @@ struct RathboneDetailsView: View {
         rateRathbone(rathbone, givenStars: 1)
     }
 
-    // Custom section header view for mealType
     private func headerView(for mealType: String) -> some View {
         Text(mealType)
             .font(.headline)
