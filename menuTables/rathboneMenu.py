@@ -82,7 +82,7 @@ try:
                 allergen_names = [name.replace("contains ", "") for name in allergen_names]
                 # Check if allergen_names is empty
                 if len(allergen_names) == 0:
-                    allergen_names_text = "None"
+                    allergen_names_text = "No Allergens"
                 else:
                     allergen_names_text = ', '.join(allergen_names)
                 print(f"Allergens: {allergen_names_text}")
