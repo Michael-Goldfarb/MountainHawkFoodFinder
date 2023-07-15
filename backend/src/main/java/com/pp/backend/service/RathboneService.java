@@ -158,7 +158,6 @@ public class RathboneService {
                 insertStatement.executeUpdate();
             }
         } catch (SQLException e) {
-            System.out.print("Error!");
             e.printStackTrace();
         }
     }

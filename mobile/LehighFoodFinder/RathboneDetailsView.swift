@@ -15,27 +15,30 @@ struct RathboneDetailsView: View {
                         ForEach(courseNames(for: mealType), id: \.self) { courseName in
                             Section(header: Text(courseName)) {
                                 ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
-                                    VStack(alignment: .leading, spacing: 4) { // Set spacing to 4
-                                        HStack(spacing: 4) { // Set spacing to 4
-                                            // Display the given stars as stars
+                                    HStack(alignment: .top, spacing: 4) {
+                                        VStack(alignment: .leading, spacing: 4) {
+                                            Text("\(rathbone.menuItemName)")
+                                                .font(.headline)
+                                            Text("Calories: \(rathbone.calorieText ?? "N/A")")
+                                                .font(.subheadline)
+                                            Text("Allergens: \(rathbone.allergenNames)")
+                                                .font(.subheadline)
+                                        }
+                                        Spacer()
+                                        Spacer() // Add Spacer here
+                                        HStack(spacing: 4) {
                                             ForEach(1...5, id: \.self) { star in
                                                 Image(systemName: "star.fill")
                                                     .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
-                                                    .font(.system(size: 12)) // Adjust the star size
+                                                    .font(.system(size: 12))
                                                     .onTapGesture {
                                                         rateRathbone(rathbone, givenStars: star)
                                                     }
                                             }
                                         }
-                                        Text("\(rathbone.menuItemName)")
-                                            .font(.headline) // Increase the font size
-                                            .padding(.top, 4)
-                                        Text("Calories: \(rathbone.calorieText ?? "N/A")")
-                                            .font(.subheadline)
-                                        Text("Allergens: \(rathbone.allergenNames)")
-                                            .font(.subheadline)
                                     }
                                     .padding()
+
 
                                 }
                             }
@@ -99,7 +102,6 @@ struct RathboneDetailsView: View {
             return
         }
         
-        print("Rathbone ID:", rathbone.id)
         print("Given Stars:", givenStars)
         
         struct RathboneRatingRequest: Codable {
@@ -109,7 +111,6 @@ struct RathboneDetailsView: View {
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type") // Set Content-Type header
-        print("done first step")
         
         let requestBody = RathboneRatingRequest(givenStars: givenStars)
         do {
