@@ -2,9 +2,9 @@ import SwiftUI
 
 struct RathboneDetailsView: View {
     @State private var rathboneOptions: [Rathbone] = []
-    @State private var isHomeViewPresented = false
+        @State private var isHomeViewPresented = false
 
-    var body: some View {
+        var body: some View {
             NavigationView {
                 VStack {
                     Button(action: {
@@ -29,18 +29,8 @@ struct RathboneDetailsView: View {
                                                 HStack(spacing: 4) {
                                                     Text("\(rathbone.menuItemName)")
                                                         .font(.headline)
+                                                        .lineLimit(1)
                                                     Spacer()
-                                                    HStack(spacing: 4) {
-                                                        ForEach(1...5, id: \.self) { star in
-                                                            Image(systemName: "star.fill")
-                                                                .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
-                                                                .font(.system(size: 12))
-                                                                .onTapGesture {
-                                                                    rateRathbone(rathbone, givenStars: star)
-                                                                }
-                                                        }
-                                                    }
-                                                    .frame(height: 20)
                                                 }
                                                 
                                                 Text("Calories: \(rathbone.calorieText ?? "N/A")")
@@ -58,6 +48,25 @@ struct RathboneDetailsView: View {
                                             }
                                             .padding(.vertical, 8)
                                             .padding(.horizontal, 16)
+                                            .overlay(
+                                                HStack(spacing: 4) {
+                                                    Spacer()
+                                                    HStack(spacing: 4) {
+                                                        ForEach(1...5, id: \.self) { star in
+                                                            Image(systemName: "star.fill")
+                                                                .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
+                                                                .font(.system(size: 12))
+                                                                .onTapGesture {
+                                                                    rateRathbone(rathbone, givenStars: star)
+                                                                }
+                                                        }
+                                                    }
+                                                    .frame(height: 20)
+                                                }
+                                                .padding(.trailing, 16)
+                                                .padding(.top, 28) // Adjust the top padding value to move the stars up or down
+                                                , alignment: .topTrailing
+                                            )
                                         }
                                     }
                                 }
