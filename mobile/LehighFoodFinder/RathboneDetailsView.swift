@@ -2,60 +2,84 @@ import SwiftUI
 
 struct RathboneDetailsView: View {
     @State private var rathboneOptions: [Rathbone] = []
+    @State private var isHomeViewPresented = false
 
     var body: some View {
-        VStack {
-            Text("Rathbone Dining Hall")
-                .font(.title)
-                .padding()
+            NavigationView {
+                VStack {
+                    Button(action: {
+                        isHomeViewPresented = true
+                    }) {
+                        Text("Go Home")
+                            .font(.headline)
+                            .padding()
+                    }
+                    .sheet(isPresented: $isHomeViewPresented) {
+                        HomeView()
+                            .environmentObject(NavigationState()) // Provide the NavigationState environment object
+                    }
+                    
+                    List {
+                        ForEach(mealTypes, id: \.self) { mealType in
+                            Section(header: headerView(for: mealType)) {
+                                ForEach(courseNames(for: mealType), id: \.self) { courseName in
+                                    Section(header: Text(courseName)) {
+                                        ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
+                                            HStack(alignment: .top, spacing: 4) {
+                                                VStack(alignment: .leading, spacing: 4) {
+                                                    Text("\(rathbone.menuItemName)")
+                                                        .font(.headline)
+                                                    Text("Calories: \(rathbone.calorieText ?? "N/A")")
+                                                        .font(.subheadline)
 
-            List {
-                ForEach(mealTypes, id: \.self) { mealType in
-                    Section(header: headerView(for: mealType)) {
-                        ForEach(courseNames(for: mealType), id: \.self) { courseName in
-                            Section(header: Text(courseName)) {
-                                ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
-                                    HStack(alignment: .top, spacing: 4) {
-                                        VStack(alignment: .leading, spacing: 4) {
-                                            Text("\(rathbone.menuItemName)")
-                                                .font(.headline)
-                                            Text("Calories: \(rathbone.calorieText ?? "N/A")")
-                                                .font(.subheadline)
-                                            Text("Allergens: \(rathbone.allergenNames)")
-                                                .font(.subheadline)
-                                        }
-                                        Spacer()
-                                        Spacer() // Add Spacer here
-                                        HStack(spacing: 4) {
-                                            ForEach(1...5, id: \.self) { star in
-                                                Image(systemName: "star.fill")
-                                                    .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
-                                                    .font(.system(size: 12))
-                                                    .onTapGesture {
-                                                        rateRathbone(rathbone, givenStars: star)
+                                                    HStack(spacing: 4) {
+                                                        Text("Allergens:")
+                                                            .font(.subheadline)
+                                                            .foregroundColor(.secondary)
+                                                        Text(rathbone.allergenNames)
+                                                            .font(.subheadline)
+                                                            .lineLimit(1)
+                                                            .frame(maxWidth: .infinity, alignment: .leading)
                                                     }
+                                                }
+                                                Spacer()
+
+                                                HStack(spacing: 4) {
+                                                    ForEach(1...5, id: \.self) { star in
+                                                        Image(systemName: "star.fill")
+                                                            .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
+                                                            .font(.system(size: 12))
+                                                            .onTapGesture {
+                                                                rateRathbone(rathbone, givenStars: star)
+                                                            }
+                                                    }
+                                                }
+                                                .frame(height: 20)
                                             }
+                                            .padding()
+                                            .fixedSize(horizontal: false, vertical: true)
                                         }
                                     }
-                                    .padding()
-
-
                                 }
                             }
                         }
                     }
                 }
+                .background(Color.white)
+                .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
+                .sheet(isPresented: $isHomeViewPresented) {
+                    RathboneDetailsView()
+                        .environmentObject(NavigationState()) // Provide the NavigationState environment object
+                }
+
+//                .sheet(isPresented: $isHomeViewPresented, content: {
+//                    HomeView()
+//                })
+                .onAppear {
+                    fetchRathboneOptions()
+                }
             }
-
-            Spacer()
         }
-        .background(Color.white)
-        .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
-        .onAppear {
-            fetchRathboneOptions()
-        }
-    }
-
     private func fetchRathboneOptions() {
         guard let url = URL(string: "http://localhost:8000/rathbone") else {
             return
