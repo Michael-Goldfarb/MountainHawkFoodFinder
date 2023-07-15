@@ -10,7 +10,7 @@ struct RathboneDetailsView: View {
                     Button(action: {
                         isHomeViewPresented = true
                     }) {
-                        Text("Go Home")
+                        Text("Back To Map")
                             .font(.headline)
                             .padding()
                     }
@@ -18,7 +18,7 @@ struct RathboneDetailsView: View {
                         HomeView()
                             .environmentObject(NavigationState()) // Provide the NavigationState environment object
                     }
-                    
+
                     List {
                         ForEach(mealTypes, id: \.self) { mealType in
                             Section(header: headerView(for: mealType)) {
@@ -26,28 +26,27 @@ struct RathboneDetailsView: View {
                                     Section(header: Text(courseName)) {
                                         ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
                                             VStack(alignment: .leading, spacing: 4) {
-                                                HStack(spacing: 4) {
-                                                    Text("\(rathbone.menuItemName)")
-                                                        .font(.headline)
-                                                        .lineLimit(1)
-                                                    Spacer()
-                                                }
+                                                Text("\(rathbone.menuItemName)")
+                                                    .font(.headline)
+                                                    .lineLimit(nil)
                                                 
                                                 Text("Calories: \(rathbone.calorieText ?? "N/A")")
                                                     .font(.subheadline)
                                                 
-                                                HStack(spacing: 4) {
-                                                    Text("Allergens:")
+                                                HStack(alignment: .top, spacing: 4) {
+                                                    Text("Dietary Restrictions: \(rathbone.allergenNames)")
                                                         .font(.subheadline)
-                                                        .foregroundColor(.secondary)
-                                                    Text(rathbone.allergenNames)
-                                                        .font(.subheadline)
-                                                        .lineLimit(1)
-                                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                                     //   .foregroundColor(.secondary)
+                                                        .lineLimit(nil)
+                                                        .fixedSize(horizontal: false, vertical: true) // Allow multiple lines
                                                 }
+
+                                                .frame(maxWidth: .infinity, alignment: .leading)
                                             }
                                             .padding(.vertical, 8)
                                             .padding(.horizontal, 16)
+                                            .fixedSize(horizontal: false, vertical: true)
+
                                             .overlay(
                                                 HStack(spacing: 4) {
                                                     Spacer()
@@ -81,6 +80,7 @@ struct RathboneDetailsView: View {
                 }
             }
         }
+    
     private func fetchRathboneOptions() {
         guard let url = URL(string: "http://localhost:8000/rathbone") else {
             return
