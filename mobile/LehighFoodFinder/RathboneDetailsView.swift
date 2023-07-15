@@ -62,19 +62,20 @@ struct RathboneDetailsView: View {
         }
 
         URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data {
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    let rathboneOptions = try decoder.decode([Rathbone].self, from: data)
-                    DispatchQueue.main.async {
-                        self.rathboneOptions = rathboneOptions
+                if let data = data {
+                    do {
+                        let decoder = JSONDecoder()
+                        decoder.keyDecodingStrategy = .convertFromSnakeCase
+                        var rathboneOptions = try decoder.decode([Rathbone].self, from: data)
+                        rathboneOptions.sort { $0.menuItemName < $1.menuItemName } // Sort alphabetically
+                        DispatchQueue.main.async {
+                            self.rathboneOptions = rathboneOptions
+                        }
+                    } catch {
+                        print("Error decoding JSON:", error)
                     }
-                } catch {
-                    print("Error decoding JSON:", error)
                 }
-            }
-        }.resume()
+            }.resume()
     }
     
     private var mealTypes: [String] {
@@ -86,7 +87,8 @@ struct RathboneDetailsView: View {
 
     private func courseNames(for mealType: String) -> [String] {
         let uniqueCourseNames = Set(rathbones(for: mealType).map({ $0.courseName }))
-        return Array(uniqueCourseNames)
+        let sortedCourseNames = uniqueCourseNames.sorted()
+        return sortedCourseNames
     }
 
     private func rathbones(for mealType: String) -> [Rathbone] {
@@ -94,7 +96,8 @@ struct RathboneDetailsView: View {
     }
 
     private func rathbones(for mealType: String, courseName: String) -> [Rathbone] {
-        return rathbones(for: mealType).filter({ $0.courseName == courseName })
+        let filteredRathbones = rathbones(for: mealType).filter { $0.courseName == courseName }
+        return filteredRathbones.sorted { $0.menuItemName < $1.menuItemName } // Sort alphabetically
     }
 
     private func rateRathbone(_ rathbone: Rathbone, givenStars: Int) {
