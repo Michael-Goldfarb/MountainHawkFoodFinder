@@ -119,7 +119,7 @@ struct HomeView: View {
                     RathboneDetailsView()
                 }
             }
-            .navigationBarTitle("Home", displayMode: .inline)
+            .navigationBarTitle("", displayMode: .inline)
         }
     }
 }

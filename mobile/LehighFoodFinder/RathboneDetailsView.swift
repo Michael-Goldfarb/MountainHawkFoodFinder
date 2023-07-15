@@ -10,11 +10,11 @@ struct RathboneDetailsView: View {
                     Button(action: {
                         isHomeViewPresented = true
                     }) {
-                        Text("Go Home")
+                        Text("Back To Map View")
                             .font(.headline)
                             .padding()
                     }
-                    .sheet(isPresented: $isHomeViewPresented) {
+                    .fullScreenCover(isPresented: $isHomeViewPresented) {
                         HomeView()
                             .environmentObject(NavigationState()) // Provide the NavigationState environment object
                     }
@@ -66,18 +66,10 @@ struct RathboneDetailsView: View {
                     }
                 }
                 .background(Color.white)
-                .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
-                .sheet(isPresented: $isHomeViewPresented) {
-                    RathboneDetailsView()
-                        .environmentObject(NavigationState()) // Provide the NavigationState environment object
-                }
-
-//                .sheet(isPresented: $isHomeViewPresented, content: {
-//                    HomeView()
-//                })
-                .onAppear {
-                    fetchRathboneOptions()
-                }
+                            .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
+                            .onAppear {
+                                fetchRathboneOptions()
+                            }
             }
         }
     private func fetchRathboneOptions() {
