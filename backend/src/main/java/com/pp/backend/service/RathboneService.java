@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 import com.pp.backend.entity.Rathbone;
+import java.util.logging.Logger;
 
 public class RathboneService {
     private final DataSource dataSource;
+    private static final Logger log = Logger.getLogger(RathboneService.class.getName());
 
     public RathboneService(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -87,7 +89,7 @@ public class RathboneService {
     public Rathbone getRathboneById(long rathboneId) {
         String sql = "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, f.givenStars, f.totalGivenStars, f.totalMaxStars, f.averageStars " +
                 "FROM rathboneOptions r " +
-                "JOIN foodRatings f ON r.menu_item_name = f.item_name " +
+                "LEFT JOIN foodRatings f ON r.menu_item_name = f.item_name " +
                 "WHERE r.id = ?";
 
         try (Connection connection = dataSource.getConnection();
@@ -137,7 +139,6 @@ public class RathboneService {
                 totalGivenStars += givenStars;
                 totalMaxStars += 5;
                 averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
-
                 updateStatement.setInt(1, givenStars);
                 updateStatement.setInt(2, totalGivenStars);
                 updateStatement.setInt(3, totalMaxStars);
@@ -146,6 +147,9 @@ public class RathboneService {
                 updateStatement.executeUpdate();
             } else {
                 // The menu item doesn't exist, insert a new row
+                totalGivenStars = givenStars;
+                totalMaxStars = 5;
+                averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
                 insertStatement.setString(1, itemName);
                 insertStatement.setInt(2, givenStars);
                 insertStatement.setInt(3, totalGivenStars);
@@ -154,6 +158,7 @@ public class RathboneService {
                 insertStatement.executeUpdate();
             }
         } catch (SQLException e) {
+            System.out.print("Error!");
             e.printStackTrace();
         }
     }

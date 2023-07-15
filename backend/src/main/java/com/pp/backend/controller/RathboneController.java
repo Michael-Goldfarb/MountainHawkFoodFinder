@@ -31,12 +31,14 @@ public class RathboneController {
     @PutMapping("/{rathboneId}")
     public ResponseEntity<Rathbone> updateFoodRatings(@PathVariable Long rathboneId, @RequestBody RathboneRatingRequest ratingRequest) {
         Rathbone rathbone = rathboneService.getRathboneById(rathboneId);
+
         if (rathbone == null) {
             return ResponseEntity.notFound().build();
         }
 
         int givenStars = ratingRequest.getGivenStars();
         int totalGivenStars = ratingRequest.getTotalGivenStars();
+        System.out.println(totalGivenStars);
         int totalMaxStars = ratingRequest.getTotalMaxStars();
         double averageStars = ratingRequest.getAverageStars();
 

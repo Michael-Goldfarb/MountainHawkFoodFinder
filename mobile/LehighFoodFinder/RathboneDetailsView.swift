@@ -73,17 +73,13 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
-
-//    private var mealTypes: [String] {
-//        let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
-//        let sortedMealTypes = ["breakfast", "lunch", "dinner"].filter({ uniqueMealTypes.contains($0) })
-//        return sortedMealTypes
-//    }
+    
     private var mealTypes: [String] {
         let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
         let sortedMealTypes = uniqueMealTypes.sorted()
         return sortedMealTypes
     }
+
 
     private func courseNames(for mealType: String) -> [String] {
         let uniqueCourseNames = Set(rathbones(for: mealType).map({ $0.courseName }))
@@ -102,22 +98,28 @@ struct RathboneDetailsView: View {
         guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
             return
         }
-
+        
+        print("Rathbone ID:", rathbone.id)
+        print("Given Stars:", givenStars)
+        
+        struct RathboneRatingRequest: Codable {
+            let givenStars: Int
+        }
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type") // Set Content-Type header
-
-        let body: [String: Any] = [
-            "givenStars": givenStars
-        ]
-
+        print("done first step")
+        
+        let requestBody = RathboneRatingRequest(givenStars: givenStars)
         do {
-            request.httpBody = try JSONSerialization.data(withJSONObject: body)
+            request.httpBody = try JSONEncoder().encode(requestBody)
         } catch {
             print("Error creating JSON data:", error)
             return
         }
-
+        print(requestBody)
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error rating Rathbone:", error)
@@ -133,6 +135,7 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
+
 
     private func upvoteRathbone(_ rathbone: Rathbone) {
         rateRathbone(rathbone, givenStars: 5)
