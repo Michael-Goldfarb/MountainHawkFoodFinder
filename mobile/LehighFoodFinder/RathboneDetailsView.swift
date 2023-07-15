@@ -10,7 +10,7 @@ struct RathboneDetailsView: View {
                     Button(action: {
                         isHomeViewPresented = true
                     }) {
-                        Text("Back To Map View")
+                        Text("Go Home")
                             .font(.headline)
                             .padding()
                     }
@@ -25,39 +25,39 @@ struct RathboneDetailsView: View {
                                 ForEach(courseNames(for: mealType), id: \.self) { courseName in
                                     Section(header: Text(courseName)) {
                                         ForEach(rathbones(for: mealType, courseName: courseName)) { rathbone in
-                                            HStack(alignment: .top, spacing: 4) {
-                                                VStack(alignment: .leading, spacing: 4) {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                HStack(spacing: 4) {
                                                     Text("\(rathbone.menuItemName)")
                                                         .font(.headline)
-                                                    Text("Calories: \(rathbone.calorieText ?? "N/A")")
-                                                        .font(.subheadline)
-
+                                                    Spacer()
                                                     HStack(spacing: 4) {
-                                                        Text("Allergens:")
-                                                            .font(.subheadline)
-                                                            .foregroundColor(.secondary)
-                                                        Text(rathbone.allergenNames)
-                                                            .font(.subheadline)
-                                                            .lineLimit(1)
-                                                            .frame(maxWidth: .infinity, alignment: .leading)
+                                                        ForEach(1...5, id: \.self) { star in
+                                                            Image(systemName: "star.fill")
+                                                                .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
+                                                                .font(.system(size: 12))
+                                                                .onTapGesture {
+                                                                    rateRathbone(rathbone, givenStars: star)
+                                                                }
+                                                        }
                                                     }
+                                                    .frame(height: 20)
                                                 }
-                                                Spacer()
-
+                                                
+                                                Text("Calories: \(rathbone.calorieText ?? "N/A")")
+                                                    .font(.subheadline)
+                                                
                                                 HStack(spacing: 4) {
-                                                    ForEach(1...5, id: \.self) { star in
-                                                        Image(systemName: "star.fill")
-                                                            .foregroundColor(rathbone.givenStars >= star ? .yellow : .gray)
-                                                            .font(.system(size: 12))
-                                                            .onTapGesture {
-                                                                rateRathbone(rathbone, givenStars: star)
-                                                            }
-                                                    }
+                                                    Text("Allergens:")
+                                                        .font(.subheadline)
+                                                        .foregroundColor(.secondary)
+                                                    Text(rathbone.allergenNames)
+                                                        .font(.subheadline)
+                                                        .lineLimit(1)
+                                                        .frame(maxWidth: .infinity, alignment: .leading)
                                                 }
-                                                .frame(height: 20)
                                             }
-                                            .padding()
-                                            .fixedSize(horizontal: false, vertical: true)
+                                            .padding(.vertical, 8)
+                                            .padding(.horizontal, 16)
                                         }
                                     }
                                 }
@@ -66,10 +66,10 @@ struct RathboneDetailsView: View {
                     }
                 }
                 .background(Color.white)
-                            .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
-                            .onAppear {
-                                fetchRathboneOptions()
-                            }
+                .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
+                .onAppear {
+                    fetchRathboneOptions()
+                }
             }
         }
     private func fetchRathboneOptions() {
