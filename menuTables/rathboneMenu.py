@@ -78,19 +78,14 @@ try:
                 allergens_div = item.find_next('div', id=lambda x: x and x.startswith('allergens-'))
                 allergen_images = allergens_div.find_all('img', class_='icon-allergen')
                 allergen_names = [image['alt'] for image in allergen_images]
-
                 # Remove "contains " from allergen names
                 allergen_names = [name.replace("contains ", "") for name in allergen_names]
-
-                allergen_names_text = ', '.join(allergen_names)
+                # Check if allergen_names is empty
+                if len(allergen_names) == 0:
+                    allergen_names_text = "None"
+                else:
+                    allergen_names_text = ', '.join(allergen_names)
                 print(f"Allergens: {allergen_names_text}")
-                
-                # # Extract the allergens
-                # allergens_div = item.find_next('div', id=lambda x: x and x.startswith('allergens-'))
-                # allergen_images = allergens_div.find_all('img', class_='icon-allergen')
-                # allergen_names = [image['alt'] for image in allergen_images]
-                # allergen_names_text = ', '.join(allergen_names)
-                # print(f"Allergens: {allergen_names_text}")
                 # Prepare the data row for insertion
                 data_row = (meal_type, course_name, menu_item_name, calorie_text, allergen_names_text)
                 data_to_insert.append(data_row)
