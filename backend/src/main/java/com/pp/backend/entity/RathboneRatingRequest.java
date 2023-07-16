@@ -1,4 +1,5 @@
 package com.pp.backend.entity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ public class RathboneRatingRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String userEmail;
     private int givenStars;
     private int totalGivenStars;
     private int totalMaxStars;
@@ -18,8 +20,8 @@ public class RathboneRatingRequest {
     public RathboneRatingRequest() {
     }
 
-    public RathboneRatingRequest(Long id, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
-        this.id = id;
+    public RathboneRatingRequest(String userEmail, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
+        this.userEmail = userEmail;
         this.givenStars = givenStars;
         this.totalGivenStars = totalGivenStars;
         this.totalMaxStars = totalMaxStars;
@@ -34,6 +36,14 @@ public class RathboneRatingRequest {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public int getGivenStars() {

@@ -148,17 +148,19 @@ struct RathboneDetailsView: View {
         guard let url = URL(string: "http://localhost:8000/rathbone/\(rathbone.id)") else {
             return
         }
-        
-        print("Given Stars:", givenStars)
-        
+
         struct RathboneRatingRequest: Codable {
             let givenStars: Int
         }
-        
+
+        let userEmail = GoogleSignInManager.shared.userEmail ?? ""  // Get the userEmail from GoogleSignInManager
+        print(userEmail)
+
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type") // Set Content-Type header
-        
+        request.setValue(userEmail, forHTTPHeaderField: "userEmail") // Set userEmail header
+
         let requestBody = RathboneRatingRequest(givenStars: givenStars)
         do {
             request.httpBody = try JSONEncoder().encode(requestBody)
@@ -167,7 +169,7 @@ struct RathboneDetailsView: View {
             return
         }
         print(requestBody)
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error rating Rathbone:", error)
@@ -183,6 +185,8 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
+
+
 
 
     private func upvoteRathbone(_ rathbone: Rathbone) {

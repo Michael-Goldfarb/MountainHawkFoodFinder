@@ -1,11 +1,13 @@
 package com.pp.backend.controller;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
-import java.util.List;
+
 import com.pp.backend.entity.Rathbone;
 import com.pp.backend.entity.RathboneRatingRequest;
 import com.pp.backend.service.RathboneService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/rathbone")
@@ -29,7 +31,7 @@ public class RathboneController {
     }
 
     @PutMapping("/{rathboneId}")
-    public ResponseEntity<Rathbone> updateFoodRatings(@PathVariable Long rathboneId, @RequestBody RathboneRatingRequest ratingRequest) {
+    public ResponseEntity<Rathbone> updateFoodRatings(@PathVariable Long rathboneId, @RequestBody RathboneRatingRequest ratingRequest, @RequestHeader("userEmail") String userEmail) {
         Rathbone rathbone = rathboneService.getRathboneById(rathboneId);
 
         if (rathbone == null) {
@@ -38,16 +40,17 @@ public class RathboneController {
 
         int givenStars = ratingRequest.getGivenStars();
         int totalGivenStars = ratingRequest.getTotalGivenStars();
-        System.out.println(totalGivenStars);
         int totalMaxStars = ratingRequest.getTotalMaxStars();
         double averageStars = ratingRequest.getAverageStars();
+    //    String userEmail = ratingRequest.getUserEmail();
 
-        rathboneService.updateFoodRatings(rathbone.getMenuItemName(), givenStars, totalGivenStars, totalMaxStars, averageStars);
+        rathboneService.updateFoodRatings(rathbone.getMenuItemName(), userEmail, givenStars, totalGivenStars, totalMaxStars, averageStars);
 
         rathbone.setGivenStars(givenStars);
         rathbone.setTotalGivenStars(totalGivenStars);
         rathbone.setTotalMaxStars(totalMaxStars);
         rathbone.setAverageStars(averageStars);
+        rathbone.setUserEmail(userEmail);
 
         return ResponseEntity.ok(rathbone);
     }

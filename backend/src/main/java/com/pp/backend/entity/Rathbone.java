@@ -1,4 +1,5 @@
 package com.pp.backend.entity;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ public class Rathbone {
     private String menuItemName;
     private String calorieText;
     private String allergenNames;
+    private String userEmail; // Added email field
     private int givenStars;
     private int totalGivenStars;
     private int totalMaxStars;
@@ -23,14 +25,14 @@ public class Rathbone {
     public Rathbone() {
     }
 
-    public Rathbone(Long id, String mealType, String courseName, String menuItemName, String calorieText,
-                    String allergenNames, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
-        this.id = id;
+    public Rathbone(String mealType, String courseName, String menuItemName, String calorieText,
+                    String allergenNames, String userEmail, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
         this.mealType = mealType;
         this.courseName = courseName;
         this.menuItemName = menuItemName;
         this.calorieText = calorieText;
         this.allergenNames = allergenNames;
+        this.userEmail = userEmail;
         this.givenStars = givenStars;
         this.totalGivenStars = totalGivenStars;
         this.totalMaxStars = totalMaxStars;
@@ -85,6 +87,14 @@ public class Rathbone {
 
     public void setAllergenNames(String allergenNames) {
         this.allergenNames = allergenNames;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
     public int getGivenStars() {
