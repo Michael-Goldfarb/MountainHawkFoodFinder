@@ -169,12 +169,14 @@ public class RathboneService {
                         if (foodRatingsResultSet.next()) {
                             int currentTotalGivenStars = foodRatingsResultSet.getInt("totalGivenStars");
                             int currentTotalMaxStars = foodRatingsResultSet.getInt("totalMaxStars");
+                            int originalGivenStars = userResultSet.getInt("given_stars");
+                            System.out.println("original given stars = " + originalGivenStars);
 
                             // Update the current values with the new rating
                             totalGivenStars += currentTotalGivenStars;
+                            totalGivenStars -= originalGivenStars;
                             totalGivenStars += givenStars;
                             totalMaxStars += currentTotalMaxStars;
-                            totalMaxStars += 5;
                             averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
 
                             // Update the foodRatings table
