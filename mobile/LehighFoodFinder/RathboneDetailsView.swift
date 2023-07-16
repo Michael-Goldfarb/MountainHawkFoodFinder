@@ -6,22 +6,33 @@ struct RathboneDetailsView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 10) {
-                Button(action: {
-                    isHomeViewPresented = true
-                }) {
-                    Image("AppleMaps")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 40, height: 40)
-                }
-                .fullScreenCover(isPresented: $isHomeViewPresented) {
-                    HomeView()
-                        .environmentObject(NavigationState()) // Provide the NavigationState environment object
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .padding(.trailing, 16)
-                    Spacer() // Add a Spacer to push the List to the bottom
+            VStack(spacing: 3) {
+                        Spacer() // Add a spacer to push the views to the top
+                        Spacer()
+                        
+                        Text("Rathbone Dining Hall")
+                            .font(.system(size: 24, weight: .bold))
+                        
+                        Text("Click on the Map to Go Back to the Map")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                        
+                        Spacer() // Add a spacer to push the button to the bottom
+                        
+                        Button(action: {
+                            isHomeViewPresented = true
+                        }) {
+                            Image("AppleMaps")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 33, height: 33)
+                        }
+                        .fullScreenCover(isPresented: $isHomeViewPresented) {
+                            HomeView()
+                                .environmentObject(NavigationState()) // Provide the NavigationState environment object
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, 16)
 
                     List {
                         ForEach(mealTypes, id: \.self) { mealType in
@@ -78,24 +89,15 @@ struct RathboneDetailsView: View {
                     }
                 }
             .background(Color.white)
-                        .navigationBarTitle("Rathbone Dining Hall", displayMode: .inline)
+                        .navigationBarTitle("", displayMode: .inline)
                         .padding(.top, -25)
                         .onAppear {
                             fetchRathboneOptions()
                         }
-                        .toolbar {
-                            ToolbarItem(placement: .principal) {
-                                VStack {
-                                    Text("Rathbone Dining Hall")
-                                        .font(.system(size: 24, weight: .bold))
-                                        .padding(.top, 10) // Add padding to move the title down
-                                    Text("Click on the Map to Go Back to the Map")
-                                        .font(.subheadline)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                        }
-            }
+                        
+                        
+                    }
+        
         }
     
     private func fetchRathboneOptions() {
