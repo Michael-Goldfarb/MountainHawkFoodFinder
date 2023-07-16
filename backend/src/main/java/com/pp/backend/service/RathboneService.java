@@ -124,51 +124,105 @@ public class RathboneService {
 
     public void updateFoodRatings(String itemName, String userEmail, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
         String selectCountSql = "SELECT COUNT(*) FROM foodRatings";
-        String selectSql = "SELECT given_stars FROM ItemRatings WHERE item_name = ? AND user_email = ?";
+        String firstSelectSql = "SELECT given_stars FROM ItemRatings WHERE item_name = ?";
+        String secondSelectSql = "SELECT given_stars FROM ItemRatings WHERE item_name = ? AND user_email = ?";
         String updateSql = "UPDATE ItemRatings SET given_stars = ? WHERE item_name = ? AND user_email = ?";
         String insertSql = "INSERT INTO ItemRatings (item_name, user_email, given_stars) VALUES (?, ?, ?)";
         String foodRatingsInsertSql = "INSERT INTO foodRatings (item_name, givenStars, totalGivenStars, totalMaxStars, averageStars) VALUES (?, ?, ?, ?, ?)";
         String updateFoodRatingsSql = "UPDATE foodRatings SET givenStars = ?, totalGivenStars = ?, totalMaxStars = ?, averageStars = ? WHERE item_name = ?";
+        String selectFoodRatingsSql = "SELECT totalGivenStars, totalMaxStars FROM foodRatings WHERE item_name = ?";
     
         try (Connection connection = dataSource.getConnection();
              PreparedStatement selectCountStatement = connection.prepareStatement(selectCountSql);
-             PreparedStatement selectStatement = connection.prepareStatement(selectSql);
+             PreparedStatement firstSelectStatement = connection.prepareStatement(firstSelectSql);
+             PreparedStatement secondSelectStatement = connection.prepareStatement(secondSelectSql);
              PreparedStatement updateStatement = connection.prepareStatement(updateSql);
              PreparedStatement insertStatement = connection.prepareStatement(insertSql);
              PreparedStatement foodRatingsInsertStatement = connection.prepareStatement(foodRatingsInsertSql);
-             PreparedStatement updateFoodRatingsStatement = connection.prepareStatement(updateFoodRatingsSql)) {
+             PreparedStatement updateFoodRatingsStatement = connection.prepareStatement(updateFoodRatingsSql);
+             PreparedStatement selectFoodRatingsStatement = connection.prepareStatement(selectFoodRatingsSql)) {
              
             ResultSet countResultSet = selectCountStatement.executeQuery();
             countResultSet.next();
             int rowCount = countResultSet.getInt(1);
     
             if (rowCount > 0) {
-                System.out.println("row > 0");                
-    
-                selectStatement.setString(1, itemName);
-                selectStatement.setString(2, userEmail);
-                ResultSet resultSet = selectStatement.executeQuery();
-    
-                if (resultSet.next()) {
-                    System.out.println("updating");
-                    totalGivenStars += givenStars;
-                    totalMaxStars += 5;
-                    averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
+                System.out.println("row > 0");   
+                
+                firstSelectStatement.setString(1, itemName);
+                ResultSet itemResultSet = firstSelectStatement.executeQuery();
 
-                    // Update the foodRatings table first
-                    updateFoodRatingsStatement.setInt(1, givenStars);
-                    updateFoodRatingsStatement.setInt(2, totalGivenStars);
-                    updateFoodRatingsStatement.setInt(3, totalMaxStars);
-                    updateFoodRatingsStatement.setDouble(4, averageStars);
-                    updateFoodRatingsStatement.setString(5, itemName);
-                    updateFoodRatingsStatement.executeUpdate();
-                    // Rating already exists for the user and item, update the existing rating
-                    updateStatement.setInt(1, givenStars);
-                    updateStatement.setString(2, itemName);
-                    updateStatement.setString(3, userEmail);
-                    updateStatement.executeUpdate();
+                if (itemResultSet.next()) {
+                    System.out.println("item exists in foodRatings");
+                    
+                    secondSelectStatement.setString(1, itemName);
+                    secondSelectStatement.setString(2, userEmail);
+                    ResultSet userResultSet = secondSelectStatement.executeQuery();
+                    
+                    if (userResultSet.next()) {
+                        System.out.println("user exists in ItemRatings");
+                        // Update the existing rating
+                        System.out.println("updating ItemRatings and foodRatings");
+                        selectFoodRatingsStatement.setString(1, itemName);
+                        ResultSet foodRatingsResultSet = selectFoodRatingsStatement.executeQuery();
+
+                        if (foodRatingsResultSet.next()) {
+                            int currentTotalGivenStars = foodRatingsResultSet.getInt("totalGivenStars");
+                            int currentTotalMaxStars = foodRatingsResultSet.getInt("totalMaxStars");
+
+                            // Update the current values with the new rating
+                            totalGivenStars += currentTotalGivenStars;
+                            totalGivenStars += givenStars;
+                            totalMaxStars += currentTotalMaxStars;
+                            totalMaxStars += 5;
+                            averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
+
+                            // Update the foodRatings table
+                            updateFoodRatingsStatement.setInt(1, givenStars);
+                            updateFoodRatingsStatement.setInt(2, totalGivenStars);
+                            updateFoodRatingsStatement.setInt(3, totalMaxStars);
+                            updateFoodRatingsStatement.setDouble(4, averageStars);
+                            updateFoodRatingsStatement.setString(5, itemName);
+                            updateFoodRatingsStatement.executeUpdate();
+
+                            // Update the ItemRatings table
+                            updateStatement.setInt(1, givenStars);
+                            updateStatement.setString(2, itemName);
+                            updateStatement.setString(3, userEmail);
+                            updateStatement.executeUpdate();
+                        }
+                    } else {
+                        System.out.println("user does not exist");
+                        System.out.println("inserting into ItemRatings and updating foodRatings");
+                        selectFoodRatingsStatement.setString(1, itemName);
+                        ResultSet foodRatingsResultSet = selectFoodRatingsStatement.executeQuery();
+
+                        if (foodRatingsResultSet.next()) {
+                            int currentTotalGivenStars = foodRatingsResultSet.getInt("totalGivenStars");
+                            int currentTotalMaxStars = foodRatingsResultSet.getInt("totalMaxStars");
+
+                            // Update the current values with the new rating
+                            totalGivenStars += currentTotalGivenStars;
+                            totalGivenStars += givenStars;
+                            totalMaxStars += currentTotalMaxStars;
+                            totalMaxStars += 5;
+                            averageStars = (double) totalGivenStars / (totalMaxStars / 5.0);
+                            // Update the foodRatings table first
+                            updateFoodRatingsStatement.setInt(1, givenStars);
+                            updateFoodRatingsStatement.setInt(2, totalGivenStars);
+                            updateFoodRatingsStatement.setInt(3, totalMaxStars);
+                            updateFoodRatingsStatement.setDouble(4, averageStars);
+                            updateFoodRatingsStatement.setString(5, itemName);
+                            updateFoodRatingsStatement.executeUpdate();
+                            // Insert a new row for the user
+                            insertStatement.setString(1, itemName);
+                            insertStatement.setString(2, userEmail);
+                            insertStatement.setInt(3, givenStars);
+                            insertStatement.executeUpdate();   
+                        }   
+                    }
                 } else {
-                    System.out.println("inserting");
+                    System.out.println("Item doesn't exist, inserting");
                     // Insert into foodRatings table
                     totalGivenStars = givenStars;
                     totalMaxStars = 5;
