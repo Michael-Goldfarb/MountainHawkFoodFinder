@@ -155,6 +155,7 @@ struct RathboneDetailsView: View {
 
         let userEmail = GoogleSignInManager.shared.userEmail ?? ""  // Get the userEmail from GoogleSignInManager
         print(userEmail)
+        print("That is the user email!")
 
         var request = URLRequest(url: url)
         request.httpMethod = "PUT"
@@ -185,7 +186,6 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
-
 
 
 

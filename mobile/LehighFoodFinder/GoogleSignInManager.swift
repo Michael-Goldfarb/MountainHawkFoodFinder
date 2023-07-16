@@ -59,6 +59,7 @@ class GoogleSignInManager: NSObject, ObservableObject {
                         completion(false)
                         return
                     }
+            self.userEmail = email
             print(email)
             
             let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
