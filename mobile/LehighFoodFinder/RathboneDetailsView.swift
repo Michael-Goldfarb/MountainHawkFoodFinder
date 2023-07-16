@@ -2,7 +2,7 @@ import SwiftUI
 
 struct RathboneDetailsView: View {
     @State private var rathboneOptions: [Rathbone] = []
-        @State private var isHomeViewPresented = false
+    @State private var isHomeViewPresented = false
 
     var body: some View {
         NavigationView {
@@ -93,12 +93,9 @@ struct RathboneDetailsView: View {
                         .padding(.top, -25)
                         .onAppear {
                             fetchRathboneOptions()
-                        }
-                        
-                        
-                    }
-        
+            }
         }
+    }
     
     private func fetchRathboneOptions() {
         guard let url = URL(string: "http://localhost:8000/rathbone") else {
