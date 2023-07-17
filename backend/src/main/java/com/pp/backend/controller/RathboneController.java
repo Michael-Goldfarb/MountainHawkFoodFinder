@@ -24,6 +24,17 @@ public class RathboneController {
         return ResponseEntity.ok(rathbones);
     }
 
+    @GetMapping("/{rathboneId}")
+    public ResponseEntity<Rathbone> getRathboneById(@PathVariable Long rathboneId) {
+        Rathbone rathbone = rathboneService.getRathboneById(rathboneId);
+
+        if (rathbone == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(rathbone);
+    }
+
     @PostMapping
     public ResponseEntity<Rathbone> createRathboneOption(@RequestBody Rathbone rathbone) {
         Rathbone createdRathbone = rathboneService.createRathboneOption(rathbone);
