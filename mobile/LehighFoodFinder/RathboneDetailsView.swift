@@ -74,13 +74,24 @@ struct RathboneDetailsView: View {
                                                                     rateRathbone(rathbone, givenStars: star)
                                                                 }
                                                         }
+                                                        if rathbone.averageStars != 0.0 {
+                                                            Text("\(rathbone.averageStars, specifier: "%.1f") Avg.")
+                                                                .font(.subheadline)
+                                                                .foregroundColor(.secondary)
+                                                        } else {
+                                                            Text("Average: N/A")
+                                                                .font(.subheadline)
+                                                                .foregroundColor(.secondary)
+                                                        }
                                                     }
                                                     .frame(height: 20)
+                                                    .padding(.trailing, 16)
                                                 }
-                                                .padding(.trailing, 16)
-                                                .padding(.top, 28) // Adjust the top padding value to move the stars up or down
+                                                .padding(.top, 28)
                                                 , alignment: .topTrailing
                                             )
+
+
                                         }
                                     }
                                 }
