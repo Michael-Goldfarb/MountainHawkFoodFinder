@@ -97,7 +97,7 @@ struct RathboneDetailsView: View {
                         }
                 }
                 if rathbone.averageStars != 0.0 {
-                    Text("Avg: \(rathbone.averageStars, specifier: "%.1f")")
+                    Text("Avg.: \(rathbone.averageStars, specifier: "%.1f")")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 } else {
@@ -109,12 +109,11 @@ struct RathboneDetailsView: View {
             .frame(height: 20)
             .padding(.trailing, 16)
         }
-        .padding(.top, -10) // Adjust the top padding value to move the stars up or down
+        .padding(.top, -10)
         .alignmentGuide(.trailing) { dimension in
             dimension[HorizontalAlignment.trailing]
         }
     }
-
     
     private func fetchRathboneOptions() {
         guard let url = URL(string: "http://localhost:8000/rathbone") else {
