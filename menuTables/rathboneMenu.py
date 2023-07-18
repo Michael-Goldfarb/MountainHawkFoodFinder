@@ -5,11 +5,11 @@ from bs4 import BeautifulSoup
 
 # Set up connection to ElephantSQL
 conn = psycopg2.connect(
-    host='rajje.db.elephantsql.com',
-    database='syabkhtb',
-    user='syabkhtb',
+    host='mahmud.db.elephantsql.com',
+    database='lengoefb',
+    user='lengoefb',
     port='5432',
-    password='J7LXI5pNQ_UoUP316yEd-yoXnCOZK8HE'
+    password='nJQkL-JFEmmoXtUmDSDZMRhEkzhZlOiL'
 )
 
 cursor = conn.cursor()
@@ -82,7 +82,7 @@ try:
                 allergen_names = [name.replace("contains ", "") for name in allergen_names]
                 # Check if allergen_names is empty
                 if len(allergen_names) == 0:
-                    allergen_names_text = "No Allergens"
+                    allergen_names_text = "no allergens"
                 else:
                     allergen_names_text = ', '.join(allergen_names)
                 print(f"Allergens: {allergen_names_text}")
