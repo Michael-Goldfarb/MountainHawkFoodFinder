@@ -2,8 +2,9 @@ import SwiftUI
 
 struct RathboneDetailsView: View {
     @State private var rathboneOptions: [Rathbone] = []
+    @State private var hoursOfOperation: [HoursOfOperation] = []
     @State private var isHomeViewPresented = false
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 3) {
@@ -41,6 +42,7 @@ struct RathboneDetailsView: View {
             .padding(.top, -25)
             .onAppear {
                 fetchRathboneOptions()
+                fetchHoursOfOperation()
             }
         }
     }
@@ -118,14 +120,12 @@ struct RathboneDetailsView: View {
         }
         .fixedSize(horizontal: false, vertical: true)
     }
-
-
     
     private func fetchRathboneOptions() {
         guard let url = URL(string: "http://localhost:8000/rathbone") else {
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data {
                 do {
@@ -143,13 +143,34 @@ struct RathboneDetailsView: View {
         }.resume()
     }
     
+    private func fetchHoursOfOperation() {
+        guard let url = URL(string: "http://localhost:8000/hours-of-operation") else {
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let data = data {
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let hoursOfOperation = try decoder.decode([HoursOfOperation].self, from: data)
+                    DispatchQueue.main.async {
+                        self.hoursOfOperation = hoursOfOperation
+                    }
+                } catch {
+                    print("Error decoding JSON:", error)
+                }
+                print("Loaded in hours of operation")
+            }
+        }.resume()
+    }
+    
     private var mealTypes: [String] {
         let allMealTypes = ["breakfast", "brunch", "lunch", "dinner"]
         let uniqueMealTypes = Array(Set(rathboneOptions.map({ $0.mealType })))
         let orderedMealTypes = allMealTypes.filter { uniqueMealTypes.contains($0) }
         return orderedMealTypes
     }
-
     
     private func courseNames(for mealType: String) -> [String] {
         let uniqueCourseNames = Set(rathbones(for: mealType).map({ $0.courseName }))
@@ -214,14 +235,14 @@ struct RathboneDetailsView: View {
         guard let url = URL(string: "http://localhost:8000/rathbone/\(rathboneId)") else {
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let data = data {
                 do {
                     let decoder = JSONDecoder()
                     decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let updatedRathbone = try decoder.decode(Rathbone.self, from: data)
-
+                    
                     DispatchQueue.main.async {
                         if let index = rathboneOptions.firstIndex(where: { $0.id == rathboneId }) {
                             rathboneOptions[index].givenStars = updatedRathbone.givenStars
@@ -236,7 +257,6 @@ struct RathboneDetailsView: View {
             }
         }.resume()
     }
-
     
     private func upvoteRathbone(_ rathbone: Rathbone) {
         rateRathbone(rathbone, givenStars: 5)
@@ -246,10 +266,47 @@ struct RathboneDetailsView: View {
         rateRathbone(rathbone, givenStars: 1)
     }
     
+    //    private func headerView(for mealType: String) -> some View {
+    //        if let hours = hoursOfOperation(for: mealType) {
+    //            return Text("\(mealType.capitalized) (\(hours))")
+    //                .font(.headline)
+    //                .frame(maxWidth: .infinity, alignment: .center)
+    //        } else {
+    //            return Text(mealType.capitalized)
+    //                .font(.headline)
+    //                .frame(maxWidth: .infinity, alignment: .center)
+    //        }
+    //    }
+    //
+    //    private func hoursOfOperation(for mealType: String) -> String? {
+    //        let matchingHours = hoursOfOperation.first { hours in
+    //            hours.diningHallName == "Rathbone Dining Hall" &&
+    //            hours.mealType.localizedCaseInsensitiveContains(mealType)
+    //        }
+    //        return matchingHours?.hours
+    //    }
+    //}
+    
     private func headerView(for mealType: String) -> some View {
-        Text(mealType)
-            .font(.headline)
-            .frame(maxWidth: .infinity, alignment: .center)
+        if let hours = hoursOfOperation(for: mealType) {
+            return Text("\(mealType.capitalized) (\(hours))")
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .center)
+        } else {
+            return Text(mealType.capitalized)
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+    
+    private func hoursOfOperation(for mealType: String) -> String? {
+        let currentDay = Calendar.current.component(.weekday, from: Date())
+        let matchingHours = hoursOfOperation.first { hours in
+            hours.diningHallName == "Rathbone Dining Hall" &&
+            hours.mealType.localizedCaseInsensitiveContains(mealType) &&
+            hours.dayOfWeek.contains(Calendar.current.weekdaySymbols[currentDay - 1])
+        }
+        return matchingHours?.hours
     }
 }
 
@@ -277,6 +334,14 @@ struct Rathbone: Codable, Identifiable {
         self.totalMaxStars = totalMaxStars
         self.averageStars = averageStars
     }
+}
+
+struct HoursOfOperation: Codable {
+    let id: String?
+    let diningHallName: String
+    let dayOfWeek: String
+    let mealType: String
+    let hours: String
 }
 
 struct RathboneDetailsView_Previews: PreviewProvider {
