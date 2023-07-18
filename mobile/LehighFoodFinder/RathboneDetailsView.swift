@@ -108,12 +108,18 @@ struct RathboneDetailsView: View {
             }
             .frame(height: 20)
             .padding(.trailing, 16)
+            .alignmentGuide(.lastTextBaseline) { dimension in
+                dimension[.bottom]
+            }
         }
         .padding(.top, -10)
         .alignmentGuide(.trailing) { dimension in
-            dimension[HorizontalAlignment.trailing]
+            dimension.width // Align the trailing edge of the rating view
         }
+        .fixedSize(horizontal: false, vertical: true)
     }
+
+
     
     private func fetchRathboneOptions() {
         guard let url = URL(string: "http://localhost:8000/rathbone") else {
@@ -138,10 +144,12 @@ struct RathboneDetailsView: View {
     }
     
     private var mealTypes: [String] {
-        let uniqueMealTypes = Set(rathboneOptions.map({ $0.mealType }))
-        let sortedMealTypes = uniqueMealTypes.sorted()
-        return sortedMealTypes
+        let allMealTypes = ["breakfast", "brunch", "lunch", "dinner"]
+        let uniqueMealTypes = Array(Set(rathboneOptions.map({ $0.mealType })))
+        let orderedMealTypes = allMealTypes.filter { uniqueMealTypes.contains($0) }
+        return orderedMealTypes
     }
+
     
     private func courseNames(for mealType: String) -> [String] {
         let uniqueCourseNames = Set(rathbones(for: mealType).map({ $0.courseName }))
