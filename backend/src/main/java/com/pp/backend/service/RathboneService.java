@@ -7,11 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 import com.pp.backend.entity.Rathbone;
-import java.util.logging.Logger;
 
 public class RathboneService {
     private final DataSource dataSource;
-    private static final Logger log = Logger.getLogger(RathboneService.class.getName());
 
     public RathboneService(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -47,7 +45,6 @@ public class RathboneService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return rathbones;
     }
 
@@ -262,30 +259,8 @@ public class RathboneService {
                 insertStatement.setInt(3, givenStars);
                 insertStatement.executeUpdate();
             }
-    
-            // Update the foodRatings table with the updated values
-            // ... (remaining code)
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-    
-
-    
-    
-    // private double calculateAverageStars(String itemName) {
-    //     String selectSql = "SELECT AVG(given_stars) FROM ItemRatings WHERE item_name = ?";
-    //     try (Connection connection = dataSource.getConnection();
-    //          PreparedStatement selectStatement = connection.prepareStatement(selectSql)) {
-    
-    //         selectStatement.setString(1, itemName);
-    //         ResultSet resultSet = selectStatement.executeQuery();
-    //         if (resultSet.next()) {
-    //             return resultSet.getDouble(1);
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return 0;
-    // }    
+    } 
 }

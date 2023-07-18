@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://rajje.db.elephantsql.com:5432/syabkhtb
-    username: syabkhtb
-    password: J7LXI5pNQ_UoUP316yEd-yoXnCOZK8HE
+    url: jdbc:postgresql://mahmud.db.elephantsql.com:5432/lengoefb
+    username: lengoefb
+    password: nJQkL-JFEmmoXtUmDSDZMRhEkzhZlOiL
   jpa:
     hibernate:
       ddl-auto: validate

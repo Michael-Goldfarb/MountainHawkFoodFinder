@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pp.backend.service.UserService;
 import com.pp.backend.service.RathboneService;
+import com.pp.backend.service.HoursOfOperationService;
 
 @Configuration
 public class AppConfig {
@@ -52,5 +53,10 @@ public class AppConfig {
     @Bean
     public RathboneService rathboneService(DataSource dataSource) {
         return new RathboneService(dataSource);
+    }
+
+    @Bean
+    public HoursOfOperationService hoursOfOperationService(DataSource dataSource) {
+        return new HoursOfOperationService(dataSource);
     }
 }
