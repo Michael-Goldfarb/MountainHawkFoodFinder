@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF347EF42A6641CC00747A17 /* HawksNestDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EF32A6641CC00747A17 /* HawksNestDetailsView.swift */; };
+		FF347EF62A6644DB00747A17 /* TheGrindDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EF52A6644DB00747A17 /* TheGrindDetailsView.swift */; };
+		FF347EF82A6645D400747A17 /* CommonGroundsDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EF72A6645D400747A17 /* CommonGroundsDetailsView.swift */; };
+		FF347EFA2A66471D00747A17 /* HideawayCafeDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EF92A66471D00747A17 /* HideawayCafeDetailsView.swift */; };
+		FF347EFC2A664A5600747A17 /* LucysCafeDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EFB2A664A5600747A17 /* LucysCafeDetailsView.swift */; };
+		FF347EFE2A664C8500747A17 /* HillsideCafeDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EFD2A664C8500747A17 /* HillsideCafeDetailsView.swift */; };
+		FF347F002A664E2B00747A17 /* GlobalCaféDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347EFF2A664E2B00747A17 /* GlobalCaféDetailsView.swift */; };
+		FF347F022A664F2B00747A17 /* IacoccaCaféDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF347F012A664F2B00747A17 /* IacoccaCaféDetailsView.swift */; };
 		FF48A4BC2A47D47600BDBFDB /* GoogleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */; };
 		FF48A4BE2A47D48100BDBFDB /* LoginHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */; };
 		FF5001192A60EC320030027F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = FF5001182A60EC320030027F /* GoogleService-Info.plist */; };
@@ -24,6 +32,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF347EF32A6641CC00747A17 /* HawksNestDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HawksNestDetailsView.swift; sourceTree = "<group>"; };
+		FF347EF52A6644DB00747A17 /* TheGrindDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TheGrindDetailsView.swift; sourceTree = "<group>"; };
+		FF347EF72A6645D400747A17 /* CommonGroundsDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonGroundsDetailsView.swift; sourceTree = "<group>"; };
+		FF347EF92A66471D00747A17 /* HideawayCafeDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HideawayCafeDetailsView.swift; sourceTree = "<group>"; };
+		FF347EFB2A664A5600747A17 /* LucysCafeDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LucysCafeDetailsView.swift; sourceTree = "<group>"; };
+		FF347EFD2A664C8500747A17 /* HillsideCafeDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HillsideCafeDetailsView.swift; sourceTree = "<group>"; };
+		FF347EFF2A664E2B00747A17 /* GlobalCaféDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "GlobalCaféDetailsView.swift"; sourceTree = "<group>"; };
+		FF347F012A664F2B00747A17 /* IacoccaCaféDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IacoccaCaféDetailsView.swift"; sourceTree = "<group>"; };
 		FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleButton.swift; sourceTree = "<group>"; };
 		FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginHeader.swift; sourceTree = "<group>"; };
 		FF5001182A60EC320030027F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -76,6 +92,14 @@
 				FFF4519E2A47C67900729F41 /* LehighFoodFinderApp.swift */,
 				FFF451BF2A47C81100729F41 /* GoogleSignInManager.swift */,
 				FFF451C32A47C84200729F41 /* HomeViewModel.swift */,
+				FF347EFF2A664E2B00747A17 /* GlobalCaféDetailsView.swift */,
+				FF347F012A664F2B00747A17 /* IacoccaCaféDetailsView.swift */,
+				FF347EFD2A664C8500747A17 /* HillsideCafeDetailsView.swift */,
+				FF347EFB2A664A5600747A17 /* LucysCafeDetailsView.swift */,
+				FF347EF92A66471D00747A17 /* HideawayCafeDetailsView.swift */,
+				FF347EF72A6645D400747A17 /* CommonGroundsDetailsView.swift */,
+				FF347EF52A6644DB00747A17 /* TheGrindDetailsView.swift */,
+				FF347EF32A6641CC00747A17 /* HawksNestDetailsView.swift */,
 				FFDE7DB12A5E74E0002F7881 /* RathboneDetailsView.swift */,
 				FFF451C52A47C85700729F41 /* LoginView.swift */,
 				FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */,
@@ -176,11 +200,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FF347EFE2A664C8500747A17 /* HillsideCafeDetailsView.swift in Sources */,
+				FF347F002A664E2B00747A17 /* GlobalCaféDetailsView.swift in Sources */,
+				FF347EFA2A66471D00747A17 /* HideawayCafeDetailsView.swift in Sources */,
 				FFF451C02A47C81100729F41 /* GoogleSignInManager.swift in Sources */,
 				FFF451C42A47C84200729F41 /* HomeViewModel.swift in Sources */,
+				FF347EF62A6644DB00747A17 /* TheGrindDetailsView.swift in Sources */,
 				FFF4519F2A47C67900729F41 /* LehighFoodFinderApp.swift in Sources */,
 				FF48A4BC2A47D47600BDBFDB /* GoogleButton.swift in Sources */,
 				FF48A4BE2A47D48100BDBFDB /* LoginHeader.swift in Sources */,
+				FF347EF42A6641CC00747A17 /* HawksNestDetailsView.swift in Sources */,
+				FF347EFC2A664A5600747A17 /* LucysCafeDetailsView.swift in Sources */,
+				FF347EF82A6645D400747A17 /* CommonGroundsDetailsView.swift in Sources */,
+				FF347F022A664F2B00747A17 /* IacoccaCaféDetailsView.swift in Sources */,
 				FFF451C62A47C85700729F41 /* LoginView.swift in Sources */,
 				FF6AD8052A5BB78F001DCA91 /* AppleButton.swift in Sources */,
 				FFDE7DB22A5E74E0002F7881 /* RathboneDetailsView.swift in Sources */,
