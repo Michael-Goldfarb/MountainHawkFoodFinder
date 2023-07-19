@@ -75,6 +75,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FF347F0A2A68ADA700747A17 /* DiningOptions */ = {
+			isa = PBXGroup;
+			children = (
+				FF347EF92A66471D00747A17 /* HideawayCafeDetailsView.swift */,
+				FF347EF32A6641CC00747A17 /* HawksNestDetailsView.swift */,
+				FF347EFB2A664A5600747A17 /* LucysCafeDetailsView.swift */,
+				FF347EFF2A664E2B00747A17 /* GlobalCaféDetailsView.swift */,
+				FF347EF52A6644DB00747A17 /* TheGrindDetailsView.swift */,
+				FF347EF72A6645D400747A17 /* CommonGroundsDetailsView.swift */,
+				FF347EFD2A664C8500747A17 /* HillsideCafeDetailsView.swift */,
+				FFDE7DB12A5E74E0002F7881 /* RathboneDetailsView.swift */,
+				FF347F012A664F2B00747A17 /* IacoccaCaféDetailsView.swift */,
+			);
+			path = DiningOptions;
+			sourceTree = "<group>";
+		};
 		FFF451922A47C67900729F41 = {
 			isa = PBXGroup;
 			children = (
@@ -98,15 +114,6 @@
 				FFF4519E2A47C67900729F41 /* LehighFoodFinderApp.swift */,
 				FFF451BF2A47C81100729F41 /* GoogleSignInManager.swift */,
 				FFF451C32A47C84200729F41 /* HomeViewModel.swift */,
-				FF347EFF2A664E2B00747A17 /* GlobalCaféDetailsView.swift */,
-				FF347F012A664F2B00747A17 /* IacoccaCaféDetailsView.swift */,
-				FF347EFD2A664C8500747A17 /* HillsideCafeDetailsView.swift */,
-				FF347EFB2A664A5600747A17 /* LucysCafeDetailsView.swift */,
-				FF347EF92A66471D00747A17 /* HideawayCafeDetailsView.swift */,
-				FF347EF72A6645D400747A17 /* CommonGroundsDetailsView.swift */,
-				FF347EF52A6644DB00747A17 /* TheGrindDetailsView.swift */,
-				FF347EF32A6641CC00747A17 /* HawksNestDetailsView.swift */,
-				FFDE7DB12A5E74E0002F7881 /* RathboneDetailsView.swift */,
 				FF347F032A6869C000747A17 /* TabSelectorView.swift */,
 				FF347F052A6869F600747A17 /* ProfileView.swift */,
 				FF347F072A686A0000747A17 /* SettingsView.swift */,
@@ -114,6 +121,7 @@
 				FF48A4BB2A47D47600BDBFDB /* GoogleButton.swift */,
 				FF6AD8042A5BB78F001DCA91 /* AppleButton.swift */,
 				FF48A4BD2A47D48100BDBFDB /* LoginHeader.swift */,
+				FF347F0A2A68ADA700747A17 /* DiningOptions */,
 				FF5001182A60EC320030027F /* GoogleService-Info.plist */,
 				FFF451A22A47C67C00729F41 /* Assets.xcassets */,
 				FFF451A42A47C67D00729F41 /* Preview Content */,
