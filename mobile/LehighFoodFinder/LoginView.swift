@@ -56,7 +56,7 @@ struct LoginView: View {
             }
         }
         .fullScreenCover(isPresented: $isLoggedIn) {
-            HomeView()
+            TabSelectorView()
         }
     }
 }

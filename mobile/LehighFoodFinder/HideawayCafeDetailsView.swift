@@ -34,7 +34,7 @@ struct HideawayCafeDetailsView: View {
                         .frame(width: 33, height: 33)
                 }
                 .fullScreenCover(isPresented: $isHomeViewPresented) {
-                    HomeView()
+                    TabSelectorView()
                         .environmentObject(NavigationState()) // Provide the NavigationState environment object
                 }
                 .frame(maxWidth: .infinity)

@@ -29,7 +29,7 @@ struct RathboneDetailsView: View {
                         .frame(width: 33, height: 33)
                 }
                 .fullScreenCover(isPresented: $isHomeViewPresented) {
-                    HomeView()
+                    TabSelectorView()
                         .environmentObject(NavigationState()) // Provide the NavigationState environment object
                 }
                 .frame(maxWidth: .infinity)
@@ -127,6 +127,10 @@ struct RathboneDetailsView: View {
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
             if let data = data {
                 do {
                     let decoder = JSONDecoder()
@@ -149,6 +153,10 @@ struct RathboneDetailsView: View {
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
             if let data = data {
                 do {
                     let decoder = JSONDecoder()
@@ -214,6 +222,10 @@ struct RathboneDetailsView: View {
         print(requestBody)
         
         URLSession.shared.dataTask(with: request) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
             if let error = error {
                 print("Error rating Rathbone:", error)
             } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
@@ -237,6 +249,10 @@ struct RathboneDetailsView: View {
         }
         
         URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
             if let data = data {
                 do {
                     let decoder = JSONDecoder()

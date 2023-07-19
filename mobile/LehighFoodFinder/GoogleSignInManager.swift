@@ -62,6 +62,13 @@ class GoogleSignInManager: NSObject, ObservableObject {
             self.userEmail = email
             print(email)
             
+            guard let name = user.profile?.name
+            else {
+                print("invalid name")
+                return
+            }
+                    self.userName = name
+            
             let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: user.accessToken.tokenString)
             
             Auth.auth().signIn(with: credential) { authResult, error in
