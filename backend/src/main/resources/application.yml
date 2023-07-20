@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://mahmud.db.elephantsql.com:5432/lengoefb
-    username: lengoefb
-    password: nJQkL-JFEmmoXtUmDSDZMRhEkzhZlOiL
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: validate
@@ -13,8 +13,8 @@ security:
     client:
       registration:
         google:
-          client-id: 23678436649-c3vdliak67h8kmffq964qrh27jc50beg.apps.googleusercontent.com
-          client-secret: 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
+          client-id: ${GOOGLE_CLIENT_ID}
+          client-secret: ${GOOGLE_CLIENT_SECRET}
           scope:
             - email
             - profile
