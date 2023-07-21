@@ -110,11 +110,9 @@ public class RathboneService {
                 rathbone.setAverageStars(resultSet.getDouble("averageStars"));
                 return rathbone;
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -263,4 +261,5 @@ public class RathboneService {
             e.printStackTrace();
         }
     } 
-}
+
+    }

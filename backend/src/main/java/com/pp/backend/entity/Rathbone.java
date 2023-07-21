@@ -16,7 +16,7 @@ public class Rathbone {
     private String menuItemName;
     private String calorieText;
     private String allergenNames;
-    private String userEmail; // Added email field
+    private String userEmail;
     private int givenStars;
     private int totalGivenStars;
     private int totalMaxStars;

@@ -37,7 +37,7 @@ struct RathboneDetailsView: View {
                 
                 listSection
             }
-            .background(Color.white)
+            .background(Color.brown)
             .navigationBarTitle("", displayMode: .inline)
             .padding(.top, -25)
             .onAppear {
@@ -45,6 +45,7 @@ struct RathboneDetailsView: View {
                 fetchHoursOfOperation()
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
     
     private var listSection: some View {
@@ -54,9 +55,13 @@ struct RathboneDetailsView: View {
                     ForEach(courseNames(for: mealType), id: \.self) { courseName in
                         section(for: courseName, mealType: mealType)
                     }
+                    
                 }
             }
-        }
+            .listRowBackground(Color.white) // Set the background color of the Section's rows to white
+                    }
+                    .listStyle(GroupedListStyle()) // Add the list style modifier
+//                    .background(Color.brown)
     }
     
     private func section(for courseName: String, mealType: String) -> some View {
@@ -281,27 +286,6 @@ struct RathboneDetailsView: View {
     private func downvoteRathbone(_ rathbone: Rathbone) {
         rateRathbone(rathbone, givenStars: 1)
     }
-    
-    //    private func headerView(for mealType: String) -> some View {
-    //        if let hours = hoursOfOperation(for: mealType) {
-    //            return Text("\(mealType.capitalized) (\(hours))")
-    //                .font(.headline)
-    //                .frame(maxWidth: .infinity, alignment: .center)
-    //        } else {
-    //            return Text(mealType.capitalized)
-    //                .font(.headline)
-    //                .frame(maxWidth: .infinity, alignment: .center)
-    //        }
-    //    }
-    //
-    //    private func hoursOfOperation(for mealType: String) -> String? {
-    //        let matchingHours = hoursOfOperation.first { hours in
-    //            hours.diningHallName == "Rathbone Dining Hall" &&
-    //            hours.mealType.localizedCaseInsensitiveContains(mealType)
-    //        }
-    //        return matchingHours?.hours
-    //    }
-    //}
     
     private func headerView(for mealType: String) -> some View {
         if let hours = hoursOfOperation(for: mealType) {
