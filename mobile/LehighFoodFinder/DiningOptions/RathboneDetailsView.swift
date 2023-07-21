@@ -279,14 +279,6 @@ struct RathboneDetailsView: View {
         }.resume()
     }
     
-    private func upvoteRathbone(_ rathbone: Rathbone) {
-        rateRathbone(rathbone, givenStars: 5)
-    }
-    
-    private func downvoteRathbone(_ rathbone: Rathbone) {
-        rateRathbone(rathbone, givenStars: 1)
-    }
-    
     private func headerView(for mealType: String) -> some View {
         if let hours = hoursOfOperation(for: mealType) {
             return Text("\(mealType.capitalized) (\(hours))")
