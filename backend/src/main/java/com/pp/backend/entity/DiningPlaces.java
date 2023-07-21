@@ -11,7 +11,8 @@ public class DiningPlaces {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String mealType;
+    private String placeName;
+    private String diningNames;
     private String courseName;
     private String menuItemName;
     private String calorieText;
@@ -25,9 +26,10 @@ public class DiningPlaces {
     public DiningPlaces() {
     }
 
-    public DiningPlaces(String mealType, String courseName, String menuItemName, String calorieText,
+    public DiningPlaces(String placeName, String diningNames, String courseName, String menuItemName, String calorieText,
                     String allergenNames, String userEmail, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
-        this.mealType = mealType;
+        this.placeName = placeName;
+        this.diningNames = diningNames;
         this.courseName = courseName;
         this.menuItemName = menuItemName;
         this.calorieText = calorieText;
@@ -49,12 +51,20 @@ public class DiningPlaces {
         this.id = id;
     }
 
-    public String getMealType() {
-        return mealType;
+    public String getPlaceName() {
+        return placeName;
+    }
+    
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+    
+    public String getDiningNames() {
+        return diningNames;
     }
 
-    public void setMealType(String mealType) {
-        this.mealType = mealType;
+    public void setDiningNames(String diningNames) {
+        this.diningNames = diningNames;
     }
 
     public String getCourseName() {

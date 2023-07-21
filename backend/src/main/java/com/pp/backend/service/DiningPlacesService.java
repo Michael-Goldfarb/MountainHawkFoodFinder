@@ -20,16 +20,18 @@ public class DiningPlacesService {
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, " +
+                    "SELECT d.id, d.place_name, d.dining_names, d.course_name, d.menu_item_name, d.calorie_text, d.allergen_names, " +
                     "f.givenStars, f.totalGivenStars, f.totalMaxStars, " +
                     "CASE WHEN f.totalMaxStars > 0 THEN (f.totalGivenStars * 1.0) / (f.totalMaxStars * 1.0 / 5.0) ELSE 0 END AS averageStars " +
-                    "FROM diningPlacesOptions r " +
-                    "LEFT JOIN foodRatings f ON r.menu_item_name = f.item_name")) {
+                    "FROM diningPlacesOptions d " +
+                    "LEFT JOIN foodRatings f ON d.menu_item_name = f.item_name")) {
                 ResultSet resultSet = statement.executeQuery();
 
                 while (resultSet.next()) {
                     DiningPlaces diningPlaces = new DiningPlaces();
                     diningPlaces.setId(resultSet.getLong("id"));
+                    diningPlace.setPlaceName(resultSet.getString("place_name"));
+                    diningPlace.setDiningNames(resultSet.getString("dining_names"));
                     diningPlaces.setMealType(resultSet.getString("meal_type"));
                     diningPlaces.setCourseName(resultSet.getString("course_name"));
                     diningPlaces.setMenuItemName(resultSet.getString("menu_item_name"));
@@ -52,21 +54,22 @@ public class DiningPlacesService {
 
 
     public DiningPlaces createDiningPlacesOption(DiningPlaces diningPlaces) {
-        String sql = "INSERT INTO diningPlacesOptions (meal_type, course_name, menu_item_name, calorie_text, allergen_names, givenStars, totalGivenStars, totalMaxStars, averageStars) " +
+        String sql = "INSERT INTO diningPlacesOptions (place_name, dining_names, course_name, menu_item_name, calorie_text, allergen_names, givenStars, totalGivenStars, totalMaxStars, averageStars) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "RETURNING id";
 
         try (Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, diningPlaces.getMealType());
-            statement.setString(2, diningPlaces.getCourseName());
-            statement.setString(3, diningPlaces.getMenuItemName());
-            statement.setString(4, diningPlaces.getCalorieText());
-            statement.setString(5, diningPlaces.getAllergenNames());
-            statement.setInt(6, diningPlaces.getGivenStars());
-            statement.setInt(7, diningPlaces.getTotalGivenStars());
-            statement.setInt(8, diningPlaces.getTotalMaxStars());
+            statement.setString(1, diningPlaces.getPlaceName());
+            statement.setString(2, diningPlaces.getDiningNames());
+            statement.setString(3, diningPlaces.getCourseName());
+            statement.setString(4, diningPlaces.getMenuItemName());
+            statement.setString(5, diningPlaces.getCalorieText());
+            statement.setString(6, diningPlaces.getAllergenNames());
+            statement.setInt(7, diningPlaces.getGivenStars());
+            statement.setInt(8, diningPlaces.getTotalGivenStars());
+            statement.setInt(9, diningPlaces.getTotalMaxStars());
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -84,10 +87,10 @@ public class DiningPlacesService {
 
 
     public DiningPlaces getDiningPlacesById(long diningPlacesId) {
-        String sql = "SELECT r.id, r.meal_type, r.course_name, r.menu_item_name, r.calorie_text, r.allergen_names, f.givenStars, f.totalGivenStars, f.totalMaxStars, f.averageStars " +
-                "FROM diningPlacesOptions r " +
-                "LEFT JOIN foodRatings f ON r.menu_item_name = f.item_name " +
-                "WHERE r.id = ?";
+        String sql = "SELECT d.id, d.place_name, d.dining_names, d.course_name, d.menu_item_name, d.calorie_text, d.allergen_names, d.givenStars, d.totalGivenStars, d.totalMaxStars, d.averageStars " +
+                "FROM diningPlacesOptions d " +
+                "LEFT JOIN foodRatings f ON d.menu_item_name = f.item_name " +
+                "WHERE d.id = ?";
 
         try (Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -99,7 +102,8 @@ public class DiningPlacesService {
             if (resultSet.next()) {
                 DiningPlaces diningPlaces = new DiningPlaces();
                 diningPlaces.setId(resultSet.getLong("id"));
-                diningPlaces.setMealType(resultSet.getString("meal_type"));
+                diningPlaces.setPlaceName(resultSet.getString("place_name"));
+                diningPlaces.setDiningNames(resultSet.getString("dining_names"));
                 diningPlaces.setCourseName(resultSet.getString("course_name"));
                 diningPlaces.setMenuItemName(resultSet.getString("menu_item_name"));
                 diningPlaces.setCalorieText(resultSet.getString("calorie_text"));
