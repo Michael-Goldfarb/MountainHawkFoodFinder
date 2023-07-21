@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pp.backend.service.UserService;
 import com.pp.backend.service.RathboneService;
 import com.pp.backend.service.HoursOfOperationService;
+import com.pp.backend.service.DiningPlacesService;
 
 @Configuration
 public class AppConfig {
@@ -48,6 +49,11 @@ public class AppConfig {
     @Bean
     public UserService userService(DataSource dataSource) {
         return new UserService(dataSource);
+    }
+
+    @Bean
+    public DiningPlacesService diningPlacesService(DataSource dataSource) {
+        return new DiningPlacesService(dataSource);
     }
 
     @Bean

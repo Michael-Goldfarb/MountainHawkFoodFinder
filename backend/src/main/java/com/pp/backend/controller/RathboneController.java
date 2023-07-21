@@ -53,7 +53,6 @@ public class RathboneController {
         int totalGivenStars = ratingRequest.getTotalGivenStars();
         int totalMaxStars = ratingRequest.getTotalMaxStars();
         double averageStars = ratingRequest.getAverageStars();
-    //    String userEmail = ratingRequest.getUserEmail();
 
         rathboneService.updateFoodRatings(rathbone.getMenuItemName(), userEmail, givenStars, totalGivenStars, totalMaxStars, averageStars);
 
