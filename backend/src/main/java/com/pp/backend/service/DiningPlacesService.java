@@ -20,7 +20,7 @@ public class DiningPlacesService {
 
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(
-                    "SELECT d.id, d.place_name, d.dining_names, d.course_name, d.menu_item_name, d.calorie_text, d.allergen_names, " +
+                    "SELECT d.id, d.place_name, d.dining_names, d.course_name, d.menu_item_name, d.calorie_text, d.allergen_names, d.price, d.more_information, " +
                     "f.givenStars, f.totalGivenStars, f.totalMaxStars, " +
                     "CASE WHEN f.totalMaxStars > 0 THEN (f.totalGivenStars * 1.0) / (f.totalMaxStars * 1.0 / 5.0) ELSE 0 END AS averageStars " +
                     "FROM diningPlacesOptions d " +
@@ -30,13 +30,14 @@ public class DiningPlacesService {
                 while (resultSet.next()) {
                     DiningPlaces diningPlaces = new DiningPlaces();
                     diningPlaces.setId(resultSet.getLong("id"));
-                    diningPlace.setPlaceName(resultSet.getString("place_name"));
-                    diningPlace.setDiningNames(resultSet.getString("dining_names"));
-                    diningPlaces.setMealType(resultSet.getString("meal_type"));
+                    diningPlaces.setPlaceName(resultSet.getString("place_name"));
+                    diningPlaces.setDiningNames(resultSet.getString("dining_names"));
                     diningPlaces.setCourseName(resultSet.getString("course_name"));
                     diningPlaces.setMenuItemName(resultSet.getString("menu_item_name"));
                     diningPlaces.setCalorieText(resultSet.getString("calorie_text"));
                     diningPlaces.setAllergenNames(resultSet.getString("allergen_names"));
+                    diningPlaces.setPrice(resultSet.getString("price"));
+                    diningPlaces.setMoreInformation(resultSet.getString("more_information"));
                     diningPlaces.setGivenStars(resultSet.getInt("givenStars"));
                     diningPlaces.setTotalGivenStars(resultSet.getInt("totalGivenStars"));
                     diningPlaces.setTotalMaxStars(resultSet.getInt("totalMaxStars"));
@@ -54,7 +55,7 @@ public class DiningPlacesService {
 
 
     public DiningPlaces createDiningPlacesOption(DiningPlaces diningPlaces) {
-        String sql = "INSERT INTO diningPlacesOptions (place_name, dining_names, course_name, menu_item_name, calorie_text, allergen_names, givenStars, totalGivenStars, totalMaxStars, averageStars) " +
+        String sql = "INSERT INTO diningPlacesOptions (place_name, dining_names, course_name, menu_item_name, calorie_text, allergen_names, price, more_information, givenStars, totalGivenStars, totalMaxStars, averageStars) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "RETURNING id";
 
@@ -67,9 +68,11 @@ public class DiningPlacesService {
             statement.setString(4, diningPlaces.getMenuItemName());
             statement.setString(5, diningPlaces.getCalorieText());
             statement.setString(6, diningPlaces.getAllergenNames());
-            statement.setInt(7, diningPlaces.getGivenStars());
-            statement.setInt(8, diningPlaces.getTotalGivenStars());
-            statement.setInt(9, diningPlaces.getTotalMaxStars());
+            statement.setString(7, diningPlaces.getPrice());
+            statement.setString(8, diningPlaces.getMoreInformation());
+            statement.setInt(9, diningPlaces.getGivenStars());
+            statement.setInt(10, diningPlaces.getTotalGivenStars());
+            statement.setInt(11, diningPlaces.getTotalMaxStars());
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -87,7 +90,7 @@ public class DiningPlacesService {
 
 
     public DiningPlaces getDiningPlacesById(long diningPlacesId) {
-        String sql = "SELECT d.id, d.place_name, d.dining_names, d.course_name, d.menu_item_name, d.calorie_text, d.allergen_names, d.givenStars, d.totalGivenStars, d.totalMaxStars, d.averageStars " +
+        String sql = "SELECT d.id, d.place_name, d.dining_names, d.course_name, d.menu_item_name, d.calorie_text, d.allergen_names, d.price, d.more_information, f.givenStars, f.totalGivenStars, f.totalMaxStars, f.averageStars " +
                 "FROM diningPlacesOptions d " +
                 "LEFT JOIN foodRatings f ON d.menu_item_name = f.item_name " +
                 "WHERE d.id = ?";
@@ -108,6 +111,8 @@ public class DiningPlacesService {
                 diningPlaces.setMenuItemName(resultSet.getString("menu_item_name"));
                 diningPlaces.setCalorieText(resultSet.getString("calorie_text"));
                 diningPlaces.setAllergenNames(resultSet.getString("allergen_names"));
+                diningPlaces.setPrice(resultSet.getString("price"));
+                diningPlaces.setMoreInformation(resultSet.getString("more_information"));
                 diningPlaces.setGivenStars(resultSet.getInt("givenStars"));
                 diningPlaces.setTotalGivenStars(resultSet.getInt("totalGivenStars"));
                 diningPlaces.setTotalMaxStars(resultSet.getInt("totalMaxStars"));
@@ -265,5 +270,4 @@ public class DiningPlacesService {
             e.printStackTrace();
         }
     } 
-
-    }
+}

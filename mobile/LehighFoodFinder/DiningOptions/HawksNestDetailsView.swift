@@ -9,6 +9,7 @@ import SwiftUI
 
 struct HawksNestDetailsView: View {
     @State private var hawksNestOptions: [HawksNest] = []
+    @State private var hoursOfOperation: [HoursOfOperation] = []
     @State private var isHomeViewPresented = false
     
     var body: some View {
@@ -51,7 +52,6 @@ struct HawksNestDetailsView: View {
                 fetchHawksNestHoursOfOperation()
             }
         }
-        .edgesIgnoringSafeArea(.all)
     }
     
     private var listSection: some View {
@@ -63,9 +63,7 @@ struct HawksNestDetailsView: View {
                     }
                 }
             }
-            .listRowBackground(Color.white) // Set the background color of the Section's rows to white
         }
-        .listStyle(GroupedListStyle()) // Add the list style modifier
     }
     
     private func section(for courseName: String, diningName: String) -> some View {
@@ -95,29 +93,111 @@ struct HawksNestDetailsView: View {
         }
     }
     
-    private func fetchHawksNestOptions() {
-        // Your API call implementation for fetching Hawks Nest options
+    private func ratingOverlay(for hawksNest: HawksNest) -> some View {
+        HStack(spacing: 4) {
+            Spacer()
+            HStack(spacing: 4) {
+                ForEach(1...5, id: \.self) { star in
+                    Image(systemName: "star.fill")
+                        .foregroundColor(hawksNest.givenStars >= star ? .yellow : .gray)
+                        .font(.system(size: 12))
+                        .onTapGesture {
+                            rateHawksNest(hawksNest, givenStars: star)
+                        }
+                }
+                if hawksNest.averageStars != 0.0 {
+                    Text("Avg.: \(hawksNest.averageStars, specifier: "%.1f")")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                } else {
+                    Text("Avg.: N/A")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .frame(height: 20)
+            .padding(.trailing, 16)
+            .alignmentGuide(.lastTextBaseline) { dimension in
+                dimension[.bottom]
+            }
+        }
+        .padding(.top, -10)
+        .alignmentGuide(.trailing) { dimension in
+            dimension.width // Align the trailing edge of the rating view
+        }
+        .fixedSize(horizontal: false, vertical: true)
     }
     
+    private func fetchHawksNestOptions() {
+        guard let url = URL(string: "http://localhost:8000/dining-places") else {
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
+            if let data = data {
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let diningPlaces = try decoder.decode([HawksNest].self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        // Filter the diningPlaces array to only include items with placeName "Hawk's Nest"
+                        self.hawksNestOptions = diningPlaces.filter { $0.placeName == "Hawk's Nest" }
+                    }
+                } catch {
+                    print("Error decoding JSON:", error)
+                }
+                print("Loaded in dining places")
+            }
+        }.resume()
+    }
+
+    
     private func fetchHawksNestHoursOfOperation() {
-        // Your API call implementation for fetching hours of operation
+        guard let url = URL(string: "http://localhost:8000/hours-of-operation") else {
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
+            if let data = data {
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let hoursOfOperation = try decoder.decode([HoursOfOperation].self, from: data)
+                    DispatchQueue.main.async {
+                        self.hoursOfOperation = hoursOfOperation
+                    }
+                } catch {
+                    print("Error decoding JSON:", error)
+                }
+                print("Loaded in hours of operation")
+            }
+        }.resume()
     }
     
     private var diningNames: [String] {
-            let allDiningNames = ["", "", ""] // Replace with actual dining names
-            let uniqueDiningNames = Array(Set(hawksNestOptions.map({ $0.diningName }))) // Replace with actual dining names
+            let allDiningNames = ["Chick-N-Bap", "Mein Bowl", "Good Batter", "Tres Habaneros"]
+            let uniqueDiningNames = Array(Set(hawksNestOptions.map({ $0.diningNames }))) // Replace with actual dining names
             let orderedDiningNames = allDiningNames.filter { uniqueDiningNames.contains($0) }
             return orderedDiningNames
         }
         
         private func courseNames(for diningName: String) -> [String] {
-            let uniqueCourseNames = Set(hawksNestOptions.filter({ $0.diningName == diningName }).map({ $0.courseName }))
+            let uniqueCourseNames = Set(hawksNestOptions.filter({ $0.diningNames == diningName }).map({ $0.courseName }))
             let sortedCourseNames = uniqueCourseNames.sorted()
             return sortedCourseNames
         }
         
         private func hawksNests(for diningName: String) -> [HawksNest] {
-            return hawksNestOptions.filter({ $0.diningName == diningName })
+            return hawksNestOptions.filter({ $0.diningNames == diningName })
         }
         
         private func hawksNests(for diningName: String, courseName: String) -> [HawksNest] {
@@ -125,18 +205,114 @@ struct HawksNestDetailsView: View {
             return filteredHawksNests.sorted { $0.menuItemName < $1.menuItemName } // Sort alphabetically
         }
     
-    private func headerView(for diningName: String) -> some View {
-        // Your implementation to get the header view for a dining name
+    private func rateHawksNest(_ hawksNest: HawksNest, givenStars: Int) {
+        guard let url = URL(string: "http://localhost:8000/dining-places/\(hawksNest.id)") else {
+            return
+        }
+        struct HawksNestRatingRequest: Codable {
+            let givenStars: Int
+        }
+        
+        let userEmail = GoogleSignInManager.shared.userEmail ?? ""  // Get the userEmail from GoogleSignInManager
+        print(userEmail)
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type") // Set Content-Type header
+        request.setValue(userEmail, forHTTPHeaderField: "userEmail") // Set userEmail header
+        
+        let requestBody = HawksNestRatingRequest(givenStars: givenStars)
+        do {
+            request.httpBody = try JSONEncoder().encode(requestBody)
+        } catch {
+            print("Error creating JSON data:", error)
+            return
+        }
+        print(requestBody)
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
+            if let error = error {
+                print("Error rating Hawks Nest:", error)
+            } else if let response = response as? HTTPURLResponse, response.statusCode == 200 {
+                print("WE GOODY")
+                DispatchQueue.main.async {
+                    print("FINALLY")
+                    if let index = hawksNestOptions.firstIndex(where: { $0.id == hawksNest.id }) {
+                        hawksNestOptions[index].givenStars = givenStars
+                        // Fetch the updated Hawks Nest object
+                        fetchUpdatedHawksNest(hawksNestId: hawksNest.id)
+                    }
+                }
+                print("Hawks Nest rated successfully")
+            } else {
+                print("Failed to rate Hawks Nest")
+            }
+        }.resume()
     }
     
-    private func hoursOfOperation(for diningName: String) -> String? {
-        // Your implementation to get hours of operation for a dining name
+    private func fetchUpdatedHawksNest(hawksNestId: Int) {
+        guard let url = URL(string: "http://localhost:8000/dining-places/\(hawksNestId)") else {
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            defer {
+                URLSession.shared.finishTasksAndInvalidate()
+            }
+            
+            if let data = data {
+                do {
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    let updatedHawksNest = try decoder.decode(HawksNest.self, from: data)
+                    
+                    DispatchQueue.main.async {
+                        if let index = hawksNestOptions.firstIndex(where: { $0.id == hawksNestId }) {
+                            hawksNestOptions[index].givenStars = updatedHawksNest.givenStars
+                            hawksNestOptions[index].totalGivenStars = updatedHawksNest.totalGivenStars
+                            hawksNestOptions[index].totalMaxStars = updatedHawksNest.totalMaxStars
+                            hawksNestOptions[index].averageStars = updatedHawksNest.averageStars
+                        }
+                    }
+                } catch {
+                    print("Error decoding JSON:", error)
+                }
+            }
+        }.resume()
+    }
+    
+    private func headerView(for mealType: String) -> some View {
+        if let hours = hoursOfOperation(for: "Hawk's Nest", in: hoursOfOperation) {
+            return Text("\(mealType.capitalized) (\(hours))")
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .center)
+        } else {
+            return Text(mealType.capitalized)
+                .font(.headline)
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+    
+    private func hoursOfOperation(for diningName: String, in hoursOfOperation: [HoursOfOperation]) -> String? {
+        let currentDay = Calendar.current.component(.weekday, from: Date())
+        for hours in hoursOfOperation {
+            if hours.diningHallName == "Hawk's Nest" &&
+                hours.dayOfWeek.contains(Calendar.current.weekdaySymbols[currentDay - 1]) {
+                return hours.hours
+            }
+        }
+        return nil
     }
 }
 
 struct HawksNest: Codable, Identifiable {
     let id: Int
-    let diningName: String // Replace with actual property name for the dining name
+    let placeName: String
+    let diningNames: String
     let courseName: String
     let menuItemName: String
     let calorieText: String?
@@ -145,10 +321,13 @@ struct HawksNest: Codable, Identifiable {
     var totalGivenStars: Int
     var totalMaxStars: Int
     var averageStars: Double
+    let price: String?
+    let moreInformation: String?
     
-    init(id: Int, diningName: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, givenStars: Int, totalGivenStars: Int, totalMaxStars: Int, averageStars: Double) {
+    init(id: Int, placeName: String, diningNames: String, courseName: String, menuItemName: String, calorieText: String?, allergenNames: String, givenStars: Int, totalGivenStars: Int, totalMaxStars: Int, averageStars: Double, price: String?, moreInformation: String?) {
         self.id = id
-        self.diningName = diningName
+        self.placeName = placeName
+        self.diningNames = diningNames
         self.courseName = courseName
         self.menuItemName = menuItemName
         self.calorieText = calorieText
@@ -157,6 +336,8 @@ struct HawksNest: Codable, Identifiable {
         self.totalGivenStars = totalGivenStars
         self.totalMaxStars = totalMaxStars
         self.averageStars = averageStars
+        self.price = price
+        self.moreInformation = moreInformation
     }
 }
     

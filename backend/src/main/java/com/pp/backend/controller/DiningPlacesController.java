@@ -44,6 +44,7 @@ public class DiningPlacesController {
     @PutMapping("/{diningPlacesId}")
     public ResponseEntity<DiningPlaces> updateFoodRatings(@PathVariable Long diningPlacesId, @RequestBody DiningPlacesRatingRequest ratingRequest, @RequestHeader("userEmail") String userEmail) {
         DiningPlaces diningPlaces = diningPlacesService.getDiningPlacesById(diningPlacesId);
+        System.out.println(diningPlaces);
 
         if (diningPlaces == null) {
             return ResponseEntity.notFound().build();

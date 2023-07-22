@@ -22,12 +22,15 @@ public class DiningPlaces {
     private int totalGivenStars;
     private int totalMaxStars;
     private double averageStars;
+    private String price;
+    private String moreInformation;
+    
 
     public DiningPlaces() {
     }
 
     public DiningPlaces(String placeName, String diningNames, String courseName, String menuItemName, String calorieText,
-                    String allergenNames, String userEmail, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars) {
+                    String allergenNames, String userEmail, int givenStars, int totalGivenStars, int totalMaxStars, double averageStars, String price, String moreInformation) {
         this.placeName = placeName;
         this.diningNames = diningNames;
         this.courseName = courseName;
@@ -39,6 +42,8 @@ public class DiningPlaces {
         this.totalGivenStars = totalGivenStars;
         this.totalMaxStars = totalMaxStars;
         this.averageStars = averageStars;
+        this.price = price;
+        this.moreInformation = moreInformation;
     }
 
     // Getters and setters
@@ -58,7 +63,7 @@ public class DiningPlaces {
     public void setPlaceName(String placeName) {
         this.placeName = placeName;
     }
-    
+
     public String getDiningNames() {
         return diningNames;
     }
@@ -137,5 +142,21 @@ public class DiningPlaces {
 
     public void setAverageStars(double averageStars) {
         this.averageStars = averageStars;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+    
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getMoreInformation() {
+        return moreInformation;
+    }
+
+    public void setMoreInformation(String moreInformation) {
+        this.moreInformation = moreInformation;
     }
 }
