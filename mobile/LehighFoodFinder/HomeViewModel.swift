@@ -238,13 +238,13 @@ struct HomeView: View {
                     } else if navigationState.selectedLocation == "The Hideaway Cafe" {
                         HideawayCafeDetailsView()
                     } else if navigationState.selectedLocation == "Lucy's Café" {
-                        LucysCaféDetailsView()
+                        LucysCafeDetailsView()
                     } else if navigationState.selectedLocation == "Hillside Cafe" {
                         HillsideCafeDetailsView()
                     } else if navigationState.selectedLocation == "Global Cafe" {
-                        GlobalCaféDetailsView()
+                        GlobalCafeDetailsView()
                     } else if navigationState.selectedLocation == "Iacocca Café" {
-                        IacoccaCaféDetailsView()
+                        IacoccaCafeDetailsView()
                     }
                 }
             }

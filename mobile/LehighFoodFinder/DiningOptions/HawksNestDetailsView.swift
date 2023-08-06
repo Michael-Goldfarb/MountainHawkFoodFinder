@@ -74,6 +74,9 @@ struct HawksNestDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
+                    Text("More Information: \(hawksNest.moreInformation ?? "N/A")")
+                        .font(.subheadline) // Display more information text
+                    
                     Text("Calories: \(hawksNest.calorieText ?? "N/A")")
                         .font(.subheadline)
                     
@@ -92,6 +95,7 @@ struct HawksNestDetailsView: View {
             }
         }
     }
+
     
     private func ratingOverlay(for hawksNest: HawksNest) -> some View {
         HStack(spacing: 4) {

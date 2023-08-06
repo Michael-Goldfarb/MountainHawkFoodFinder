@@ -282,27 +282,6 @@ struct RathboneDetailsView: View {
         rateRathbone(rathbone, givenStars: 1)
     }
     
-    //    private func headerView(for mealType: String) -> some View {
-    //        if let hours = hoursOfOperation(for: mealType) {
-    //            return Text("\(mealType.capitalized) (\(hours))")
-    //                .font(.headline)
-    //                .frame(maxWidth: .infinity, alignment: .center)
-    //        } else {
-    //            return Text(mealType.capitalized)
-    //                .font(.headline)
-    //                .frame(maxWidth: .infinity, alignment: .center)
-    //        }
-    //    }
-    //
-    //    private func hoursOfOperation(for mealType: String) -> String? {
-    //        let matchingHours = hoursOfOperation.first { hours in
-    //            hours.diningHallName == "Rathbone Dining Hall" &&
-    //            hours.mealType.localizedCaseInsensitiveContains(mealType)
-    //        }
-    //        return matchingHours?.hours
-    //    }
-    //}
-    
     private func headerView(for mealType: String) -> some View {
         if let hours = hoursOfOperation(for: mealType) {
             return Text("\(mealType.capitalized) (\(hours))")
