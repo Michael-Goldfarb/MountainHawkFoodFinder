@@ -74,24 +74,24 @@ struct HillsideCafeDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    if let calories = hillsideCafe.calorieText {
+                    if let calories = hillsideCafe.calorieText, !calories.isEmpty {
                         Text("Calories: \(calories)")
-                            .font(.subheadline) // Display calories text
+                            .font(.subheadline)
                     }
                     
-                    if let price = hillsideCafe.price {
+                    if let price = hillsideCafe.price, !price.isEmpty {
                         Text("Price: \(price)")
-                            .font(.subheadline) // Display price text
+                            .font(.subheadline)
                     }
                     
                     if !hillsideCafe.allergenNames.isEmpty {
                         Text("Allergens: \(hillsideCafe.allergenNames)")
-                            .font(.subheadline) // Display allergen names text
+                            .font(.subheadline)
                     }
                     
-                    if let moreInfo = hillsideCafe.moreInformation {
+                    if let moreInfo = hillsideCafe.moreInformation, !moreInfo.isEmpty {
                         Text("More Information: \(moreInfo)")
-                            .font(.subheadline) // Display more information text
+                            .font(.subheadline)
                     }
                 }
                 .padding(.vertical, 8)
@@ -102,41 +102,49 @@ struct HillsideCafeDetailsView: View {
         }
     }
 
+
     
     private func ratingOverlay(for hillsideCafe: HillsideCafe) -> some View {
-        HStack(spacing: 4) {
-            Spacer()
-            VStack(alignment: .trailing) { // Align stars to the right
-                HStack(spacing: 4) {
-                    ForEach(1...5, id: \.self) { star in
-                        Image(systemName: "star.fill")
-                            .foregroundColor(hillsideCafe.givenStars >= star ? .yellow : .gray)
-                            .font(.system(size: 12))
-                            .onTapGesture {
-                                rateHillsideCafe(hillsideCafe, givenStars: star)
+        if ["DELI BREAKFAST SANDWICHES [AVAILABLE ALL DAY]", "STARBUCKS REFRESHERS ICED BEVERAGES (CONTAIN CAFFEINE)"].contains(hillsideCafe.courseName) {
+            return AnyView(
+                HStack {
+                    Spacer()
+                    VStack(alignment: .trailing) { // Align stars to the right
+                        HStack(spacing: 4) {
+                            ForEach(1...5, id: \.self) { star in
+                                Image(systemName: "star.fill")
+                                    .foregroundColor(hillsideCafe.givenStars >= star ? .yellow : .gray)
+                                    .font(.system(size: 12))
+                                    .onTapGesture {
+                                        rateHillsideCafe(hillsideCafe, givenStars: star)
+                                    }
                             }
-                    }
-                    if hillsideCafe.averageStars != 0.0 {
-                        Text("Avg.: \(hillsideCafe.averageStars, specifier: "%.1f")")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    } else {
-                        Text("Avg.: N/A")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            if hillsideCafe.averageStars != 0.0 {
+                                Text("Avg.: \(hillsideCafe.averageStars, specifier: "%.1f")")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            } else {
+                                Text("Avg.: N/A")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .frame(height: 20)
+                        .padding(.trailing, 16)
+                        .alignmentGuide(.lastTextBaseline) { dimension in
+                            dimension[.bottom]
+                        }
                     }
                 }
-                .frame(height: 20)
-                .padding(.trailing, 16)
-                .alignmentGuide(.lastTextBaseline) { dimension in
-                    dimension[.bottom]
-                }
-            }
+                .padding(.bottom, 10) // Adjust downward padding
+                .padding(.trailing, 16) // Adjust right padding
+                .fixedSize(horizontal: false, vertical: true)
+            )
+        } else {
+            return AnyView(EmptyView()) // Return an empty view for other course names
         }
-        .padding(.bottom, 10) // Adjust downward padding
-        .padding(.trailing, 16) // Adjust right padding
-        .fixedSize(horizontal: false, vertical: true)
     }
+
 
     
     private func fetchHillsideCafeOptions() {
