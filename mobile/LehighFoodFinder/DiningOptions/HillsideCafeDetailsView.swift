@@ -84,10 +84,18 @@ struct HillsideCafeDetailsView: View {
                             .font(.subheadline)
                     }
                     
-                    if !hillsideCafe.allergenNames.isEmpty {
-                        Text("Allergens: \(hillsideCafe.allergenNames)")
-                            .font(.subheadline)
+                    HStack(alignment: .top, spacing: 4) {
+                        if !hillsideCafe.allergenNames.isEmpty {
+                            Text("Dietary Restrictions: \(hillsideCafe.allergenNames)")
+                                .font(.subheadline)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else {
+                            Text("Dietary Restrictions: Not available")
+                                .font(.subheadline)
+                        }
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     
                     if let moreInfo = hillsideCafe.moreInformation, !moreInfo.isEmpty {
                         Text("More Information: \(moreInfo)")
@@ -101,50 +109,41 @@ struct HillsideCafeDetailsView: View {
             }
         }
     }
-
-
     
     private func ratingOverlay(for hillsideCafe: HillsideCafe) -> some View {
-        if ["DELI BREAKFAST SANDWICHES [AVAILABLE ALL DAY]", "STARBUCKS REFRESHERS ICED BEVERAGES (CONTAIN CAFFEINE)"].contains(hillsideCafe.courseName) {
-            return AnyView(
-                HStack {
-                    Spacer()
-                    VStack(alignment: .trailing) { // Align stars to the right
-                        HStack(spacing: 4) {
-                            ForEach(1...5, id: \.self) { star in
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(hillsideCafe.givenStars >= star ? .yellow : .gray)
-                                    .font(.system(size: 12))
-                                    .onTapGesture {
-                                        rateHillsideCafe(hillsideCafe, givenStars: star)
-                                    }
+        HStack(spacing: 4) {
+            Spacer()
+            VStack(alignment: .trailing) { // Align stars to the right
+                HStack(spacing: 4) {
+                    ForEach(1...5, id: \.self) { star in
+                        Image(systemName: "star.fill")
+                            .foregroundColor(hillsideCafe.givenStars >= star ? .yellow : .gray)
+                            .font(.system(size: 12))
+                            .onTapGesture {
+                                rateHillsideCafe(hillsideCafe, givenStars: star)
                             }
-                            if hillsideCafe.averageStars != 0.0 {
-                                Text("Avg.: \(hillsideCafe.averageStars, specifier: "%.1f")")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            } else {
-                                Text("Avg.: N/A")
-                                    .font(.subheadline)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .frame(height: 20)
-                        .padding(.trailing, 16)
-                        .alignmentGuide(.lastTextBaseline) { dimension in
-                            dimension[.bottom]
-                        }
+                    }
+                    if hillsideCafe.averageStars != 0.0 {
+                        Text("Avg.: \(hillsideCafe.averageStars, specifier: "%.1f")")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text("Avg.: N/A")
+                            .font(.subheadline)
+                            .foregroundColor(.secondary)
                     }
                 }
-                .padding(.bottom, 10) // Adjust downward padding
-                .padding(.trailing, 16) // Adjust right padding
-                .fixedSize(horizontal: false, vertical: true)
-            )
-        } else {
-            return AnyView(EmptyView()) // Return an empty view for other course names
+                .frame(height: 20)
+                .padding(.trailing, 16)
+                .alignmentGuide(.lastTextBaseline) { dimension in
+                    dimension[.bottom]
+                }
+            }
         }
+        .padding(.bottom, 10) // Adjust downward padding
+        .padding(.trailing, 16) // Adjust right padding
+        .fixedSize(horizontal: false, vertical: true)
     }
-
 
     
     private func fetchHillsideCafeOptions() {

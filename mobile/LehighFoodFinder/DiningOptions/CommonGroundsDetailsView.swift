@@ -74,16 +74,33 @@ struct CommonGroundsDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    Text("Calories: \(commonGrounds.calorieText ?? "N/A")")
-                        .font(.subheadline)
+                    if let calories = commonGrounds.calorieText, !calories.isEmpty {
+                        Text("Calories: \(calories)")
+                            .font(.subheadline)
+                    }
+                    
+                    if let price = commonGrounds.price, !price.isEmpty {
+                        Text("Price: \(price)")
+                            .font(.subheadline)
+                    }
                     
                     HStack(alignment: .top, spacing: 4) {
-                        Text("Dietary Restrictions: \(commonGrounds.allergenNames)")
-                            .font(.subheadline)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !commonGrounds.allergenNames.isEmpty {
+                            Text("Dietary Restrictions: \(commonGrounds.allergenNames)")
+                                .font(.subheadline)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else {
+                            Text("Dietary Restrictions: Not available")
+                                .font(.subheadline)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let moreInfo = commonGrounds.moreInformation, !moreInfo.isEmpty {
+                        Text("More Information: \(moreInfo)")
+                            .font(.subheadline)
+                    }
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)
@@ -92,6 +109,7 @@ struct CommonGroundsDetailsView: View {
             }
         }
     }
+
     
     private func ratingOverlay(for commonGrounds: CommonGrounds) -> some View {
         HStack(spacing: 4) {
