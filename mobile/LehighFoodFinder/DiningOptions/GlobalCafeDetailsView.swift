@@ -74,16 +74,33 @@ struct GlobalCafeDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    Text("Calories: \(globalCafe.calorieText ?? "N/A")")
-                        .font(.subheadline)
+                    if let calories = globalCafe.calorieText, !calories.isEmpty {
+                        Text("Calories: \(calories)")
+                            .font(.subheadline)
+                    }
+                    
+                    if let price = globalCafe.price, !price.isEmpty {
+                        Text("Price: \(price)")
+                            .font(.subheadline)
+                    }
                     
                     HStack(alignment: .top, spacing: 4) {
-                        Text("Dietary Restrictions: \(globalCafe.allergenNames)")
-                            .font(.subheadline)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !globalCafe.allergenNames.isEmpty {
+                            Text("Dietary Restrictions: \(globalCafe.allergenNames)")
+                                .font(.subheadline)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else {
+                            Text("Dietary Restrictions: Not available")
+                                .font(.subheadline)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let moreInfo = globalCafe.moreInformation, !moreInfo.isEmpty {
+                        Text("More Information: \(moreInfo)")
+                            .font(.subheadline)
+                    }
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)

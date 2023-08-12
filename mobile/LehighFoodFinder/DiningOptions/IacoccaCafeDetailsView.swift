@@ -74,19 +74,33 @@ struct IacoccaCafeDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    Text("More Information: \(iacoccaCafe.moreInformation ?? "N/A")")
-                        .font(.subheadline) // Display more information text
+                    if let calories = iacoccaCafe.calorieText, !calories.isEmpty {
+                        Text("Calories: \(calories)")
+                            .font(.subheadline)
+                    }
                     
-                    Text("Calories: \(iacoccaCafe.calorieText ?? "N/A")")
-                        .font(.subheadline)
+                    if let price = iacoccaCafe.price, !price.isEmpty {
+                        Text("Price: \(price)")
+                            .font(.subheadline)
+                    }
                     
                     HStack(alignment: .top, spacing: 4) {
-                        Text("Dietary Restrictions: \(iacoccaCafe.allergenNames)")
-                            .font(.subheadline)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !iacoccaCafe.allergenNames.isEmpty {
+                            Text("Dietary Restrictions: \(iacoccaCafe.allergenNames)")
+                                .font(.subheadline)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else {
+                            Text("Dietary Restrictions: Not available")
+                                .font(.subheadline)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let moreInfo = iacoccaCafe.moreInformation, !moreInfo.isEmpty {
+                        Text("More Information: \(moreInfo)")
+                            .font(.subheadline)
+                    }
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)

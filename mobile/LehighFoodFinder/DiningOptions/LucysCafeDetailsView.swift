@@ -74,16 +74,33 @@ struct LucysCafeDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    Text("Calories: \(lucysCafe.calorieText ?? "N/A")")
-                        .font(.subheadline)
+                    if let calories = lucysCafe.calorieText, !calories.isEmpty {
+                        Text("Calories: \(calories)")
+                            .font(.subheadline)
+                    }
+                    
+                    if let price = lucysCafe.price, !price.isEmpty {
+                        Text("Price: \(price)")
+                            .font(.subheadline)
+                    }
                     
                     HStack(alignment: .top, spacing: 4) {
-                        Text("Dietary Restrictions: \(lucysCafe.allergenNames)")
-                            .font(.subheadline)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !lucysCafe.allergenNames.isEmpty {
+                            Text("Dietary Restrictions: \(lucysCafe.allergenNames)")
+                                .font(.subheadline)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else {
+                            Text("Dietary Restrictions: Not available")
+                                .font(.subheadline)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let moreInfo = lucysCafe.moreInformation, !moreInfo.isEmpty {
+                        Text("More Information: \(moreInfo)")
+                            .font(.subheadline)
+                    }
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)

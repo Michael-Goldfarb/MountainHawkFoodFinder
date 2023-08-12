@@ -74,19 +74,33 @@ struct HawksNestDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    Text("More Information: \(hawksNest.moreInformation ?? "N/A")")
-                        .font(.subheadline) // Display more information text
+                    if let calories = hawksNest.calorieText, !calories.isEmpty {
+                        Text("Calories: \(calories)")
+                            .font(.subheadline)
+                    }
                     
-                    Text("Calories: \(hawksNest.calorieText ?? "N/A")")
-                        .font(.subheadline)
+                    if let price = hawksNest.price, !price.isEmpty {
+                        Text("Price: \(price)")
+                            .font(.subheadline)
+                    }
                     
                     HStack(alignment: .top, spacing: 4) {
-                        Text("Dietary Restrictions: \(hawksNest.allergenNames)")
-                            .font(.subheadline)
-                            .lineLimit(nil)
-                            .fixedSize(horizontal: false, vertical: true)
+                        if !hawksNest.allergenNames.isEmpty {
+                            Text("Dietary Restrictions: \(hawksNest.allergenNames)")
+                                .font(.subheadline)
+                                .lineLimit(nil)
+                                .fixedSize(horizontal: false, vertical: true)
+                        } else {
+                            Text("Dietary Restrictions: Not available")
+                                .font(.subheadline)
+                        }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if let moreInfo = hawksNest.moreInformation, !moreInfo.isEmpty {
+                        Text("More Information: \(moreInfo)")
+                            .font(.subheadline)
+                    }
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)
