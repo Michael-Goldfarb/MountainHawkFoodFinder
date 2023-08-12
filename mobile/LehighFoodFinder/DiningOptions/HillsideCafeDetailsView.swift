@@ -74,13 +74,25 @@ struct HillsideCafeDetailsView: View {
                         .font(.headline)
                         .lineLimit(nil)
                     
-                    Text("More Information: \(hillsideCafe.moreInformation ?? "N/A")")
-                        .font(.subheadline) // Display more information text
+                    if let calories = hillsideCafe.calorieText {
+                        Text("Calories: \(calories)")
+                            .font(.subheadline) // Display calories text
+                    }
                     
-                    Text("Calories: \(hillsideCafe.calorieText ?? "N/A")")
-                        .font(.subheadline)
+                    if let price = hillsideCafe.price {
+                        Text("Price: \(price)")
+                            .font(.subheadline) // Display price text
+                    }
                     
+                    if !hillsideCafe.allergenNames.isEmpty {
+                        Text("Allergens: \(hillsideCafe.allergenNames)")
+                            .font(.subheadline) // Display allergen names text
+                    }
                     
+                    if let moreInfo = hillsideCafe.moreInformation {
+                        Text("More Information: \(moreInfo)")
+                            .font(.subheadline) // Display more information text
+                    }
                 }
                 .padding(.vertical, 8)
                 .padding(.horizontal, 16)
@@ -89,6 +101,7 @@ struct HillsideCafeDetailsView: View {
             }
         }
     }
+
     
     private func ratingOverlay(for hillsideCafe: HillsideCafe) -> some View {
         HStack(spacing: 4) {
