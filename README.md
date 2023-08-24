@@ -17,3 +17,11 @@
   <br>
   <em>Eatery page where the user is sent after clicking on an eatery annotation from the home page. This is Rathbone Dining Hall, which is updated daily based on the daily menu. On the page, there are specific sections for breakfast, lunch, and dinner. There are subsections of each meal for course names, like "simple servings" and "veg out". For each menu item, there are a list of allergens and the amount of calories that the item has.</em>
 </p>
+
+## How to Use:
+1. Open a terminal and paste the below text:
+2.     git clone https://github.com/Michael-Goldfarb/MountainHawkFoodFinder.git
+3. cd into MountainHawkFoodFinder by typing 'cd MountainHawkFoodFinder'
+4. Open Xcode, and open the 'mobile' folder of MountainHawkFoodFinder
+5. Start the backend by typing 'cd backend', then 'mvn spring-boot:run'
+6. After starting the backend, click on the 'run' button on Xcode to start the app simulator!
