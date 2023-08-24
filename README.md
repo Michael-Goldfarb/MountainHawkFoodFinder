@@ -15,5 +15,5 @@
 <p align="center">
   <img width="300" alt="Eatery Page [Rathbone Dining Hall]" src="https://github.com/Michael-Goldfarb/MountainHawkFoodFinder/assets/66848094/37417c90-25c1-4d94-8b4c-b384e946686c">
   <br>
-  <em>Eatery page where the user is sent after clicking on an eatery annotation from the home page. This is Rathbone Dining Hall, which is updated daily based on the daily menu. On the page, there are specific section for breakfast, lunch, and dinner. There are subsections of each meal for course names, like "simple servings" and "veg out". For each menu item, there are a list of allergens and the amount of calories that the item has.</em>
+  <em>Eatery page where the user is sent after clicking on an eatery annotation from the home page. This is Rathbone Dining Hall, which is updated daily based on the daily menu. On the page, there are specific sections for breakfast, lunch, and dinner. There are subsections of each meal for course names, like "simple servings" and "veg out". For each menu item, there are a list of allergens and the amount of calories that the item has.</em>
 </p>
