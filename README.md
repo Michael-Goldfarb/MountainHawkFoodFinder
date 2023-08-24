@@ -1,7 +1,7 @@
 <h1 align="center">MOUNTAIN HAWK FOOD FINDER</h1>
 
 <p align="center">
-  <img width="300" alt="Login Page" src="https://github.com/Michael-Goldfarb/MountainHawkFoodFinder/assets/66848094/d6abfd82-95b0-4954-ac2d-40631b9ef2e2">
+  <img width="300" alt="Login Page" src="https://github.com/Michael-Goldfarb/MountainHawkFoodFinder/assets/66848094/34cc481e-e8e4-4e95-9a5a-b7166b2763e9">
   <br>
   <em>Login Page where the user is sent after opening the app. Currently, to sign in, the user must sign in with Google and sign in with their Lehigh student email.</em>
 </p>
