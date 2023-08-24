@@ -21,7 +21,11 @@
 ## How to Use:
 1. Open a terminal and paste the below text:
 2.     git clone https://github.com/Michael-Goldfarb/MountainHawkFoodFinder.git
-3. cd into MountainHawkFoodFinder by typing 'cd MountainHawkFoodFinder'
-4. Open Xcode, and open the 'mobile' folder of MountainHawkFoodFinder
-5. Start the backend by typing 'cd backend', then 'mvn spring-boot:run'
-6. After starting the backend, click on the 'run' button on Xcode to start the app simulator!
+3. cd into MountainHawkFoodFinder by typing:
+4.     cd MountainHawkFoodFinder
+5. Open Xcode, and open the 'mobile' folder of MountainHawkFoodFinder
+6. Start the backend by typing:
+7.     cd backend
+8. Then type:
+9.     mvn spring-boot:run
+10. After starting the backend, click on the 'run' button on Xcode to start the app simulator!
